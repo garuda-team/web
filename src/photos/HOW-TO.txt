@@ -1,0 +1,18 @@
+HOW TO ADD YOUR PHOTOS
+======================
+
+Drop files into these folders. The website finds them by itself:
+no code to change. One folder per section, under src/photos/:
+
+home/home_title/      Feeder cut-out for the title (PNG, transparent).
+logo/                 Team logo (PNG, transparent): loader, nav bar and Team section.
+home/home_team/       Portraits: 1.jpg to 5.jpg (same order as the team in src/content.js).
+home/home_intro/, home/home_prwph1/   Other home sections.
+
+Files show in name order. The words after a leading number become the
+caption: "03-arms-on-the-body.jpg" is shown as "Arms on the body".
+
+TIPS
+----
+- Use .jpg, .png or .webp. iPhone .heic does not work in most browsers.
+- Resize photos to about 2000 px wide. Keep each video under 20 MB.

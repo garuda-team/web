@@ -1,0 +1,1480 @@
+/*
+  ============================================================================
+   LAYER: fixed type, orange-card grain veil (.build__frame::after), gradients, loader, presentation,
+   word-by-word headlines, ghost words, and numbers band.
+   Loaded after styles.css. Colours only through the tokens in :root.
+  ============================================================================
+*/
+
+/* ------------------------------------------------------- type */
+
+/* Intro title: always Copperplate (Cinzel, OFL, as Linux fallback). */
+.intro__brand {
+  font-family: var(--font-intro);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  font-synthesis: none;
+}
+
+.h2,
+.hero__title,
+.intro__title{
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-track);
+  line-height: var(--display-leading);
+}
+
+.h3 {
+  font-weight: var(--display-weight);
+}
+
+/* ------------------------------------------------ dark theme + single backdrop */
+
+/* The dark ground is the only theme. Every surface shares these tokens; the sections
+   are transparent so the fixed .backdrop canvas shows through. */
+:root,
+.surface-paper,
+.surface-steel {
+  --bg: var(--ink);
+  --bg-2: var(--forest-deep);
+  --fg: var(--paper);
+  --muted: var(--sage);
+  --focus: var(--sky-soft);
+  --rule: var(--forest);
+  --rule-strong: var(--moss);
+  --panel: var(--forest);
+  --ghost: color-mix(in srgb, var(--paper) 5%, transparent);
+  --glow: color-mix(in srgb, var(--forest) 12%, transparent);
+  --grain-card-opacity: 0.32;
+  --grid-line: color-mix(in srgb, var(--forest) 75%, transparent);
+  color-scheme: dark;
+}
+
+:root {
+  /* small boxes: chip, inside card, kit frame */
+  --radius-box: 0.75rem;
+  --box-orange: color-mix(in srgb, var(--forest) 10%, transparent);
+  --box-ink: color-mix(in srgb, var(--ink) 10%, transparent);
+}
+
+:root {
+  /* stops read by components/Backdrop.jsx from every [data-wave] block */
+  --wave-bg: var(--forest);
+  --wave-dot: var(--paper);
+}
+
+#project {
+  --wave-bg: var(--forest);
+}
+
+body {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* Home only (App sets data-page on <html>): light ground, forest dots.
+   Footer is .surface-ink and Phase 1 / Phase 2 do not match, so they stay dark. */
+
+:root[data-page="home"],
+:root[data-page="hardware"],
+:root[data-page="software"],
+:root[data-page="team"] {
+  --wave-bg: var(--sand);
+  --wave-dot: var(--forest);
+}
+
+:root[data-page="home"] #project,
+:root[data-page="home"] .build {
+  --wave-bg: var(--sand);
+}
+
+:root[data-page="home"] body,
+:root[data-page="hardware"] body,
+:root[data-page="software"] body,
+:root[data-page="team"] body {
+  background: var(--sand);
+  color: var(--ink);
+}
+
+:root[data-page="home"] .surface-paper,
+:root[data-page="hardware"] .surface-paper,
+:root[data-page="software"] .surface-paper,
+:root[data-page="team"] .surface-paper {
+  --bg: var(--sand);
+  --bg-2: var(--linen);
+  --fg: var(--ink);
+  --muted: var(--forest);
+  --focus: var(--sky-deep);
+  --rule: var(--sand);
+  --rule-strong: var(--linen);
+  --panel: var(--paper);
+  --ghost: color-mix(in srgb, var(--ink) 5%, transparent);
+  --glow: color-mix(in srgb, var(--forest) 9%, transparent);
+  --grain-card-opacity: 0.12;
+  --grid-line: color-mix(in srgb, var(--linen) 45%, transparent);
+  color-scheme: light;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+:is(.section, .hero, .intro).surface-paper,
+:is(.section, .hero, .intro).surface-steel,
+:is(.section, .hero, .intro).surface-ink {
+  background-color: transparent;
+}
+
+.build__frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--grain-card-opacity);
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+@media (min-width: 1081px) {
+  .nav__bar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+  }
+  .nav__brand {
+    justify-self: start;
+  }
+  .nav__links {
+    justify-content: center;
+    gap: 6px;
+    margin-left: 0;
+  }
+  .nav__end {
+    justify-self: end;
+  }
+}
+
+.nav__links .nav__link {
+  padding: 8px 16px;
+  color: var(--fg);
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+  backdrop-filter: saturate(1.4) blur(14px);
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.nav__links .nav__link:hover {
+  border-color: var(--fg);
+}
+
+.nav__links .nav__link[aria-current] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+
+.nav__links .nav__link[aria-current]::after {
+  display: none;
+}
+
+.nav__links .nav__link:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav__links .nav__link {
+    transition: none;
+  }
+}
+
+/* --------------------------------------------------------------- loader */
+
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  background-image: radial-gradient(60% 50% at 50% 55%, var(--glow), transparent 70%);
+  transition: transform 0.85s var(--ease-in-out-cubic);
+}
+
+.loader.is-out {
+  transform: translate3d(0, -100%, 0);
+}
+
+.loader__mark {
+  display: grid;
+  place-items: center;
+  opacity: 0;
+}
+
+.loader__mark .brand-mark {
+  height: clamp(175px, 125px + 9.375vw, 250px);
+}
+
+/* --------------------------------------------- word-by-word headlines */
+
+.split__mask {
+  display: inline-block;
+  overflow: clip;
+  vertical-align: top;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+.split__word {
+  display: inline-block;
+  transform: translate3d(0, 105%, 0);
+  transition: transform 0.9s cubic-bezier(0.34, 1.36, 0.64, 1);
+  transition-delay: calc(var(--d, 0ms) + var(--i, 0) * var(--stagger, 90ms));
+}
+
+.split.is-in .split__word {
+  transform: none;
+}
+
+/* ---------------------------------------------------------- ghost words */
+
+.ghost {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  padding-top: clamp(1rem, 3vw, 3rem);
+}
+
+.ghost__word {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  font-size: var(--t-ghost);
+  letter-spacing: var(--display-track);
+  line-height: 0.85;
+  color: var(--ghost);
+  will-change: transform;
+}
+
+.ghost__mask {
+  display: inline-block;
+  overflow: clip;
+}
+
+.ghost__text {
+  display: inline-block;
+  transform: translate3d(0, 100%, 0);
+  transition: transform 1.2s var(--ease-out-expo);
+}
+
+.ghost.is-in .ghost__text {
+  transform: none;
+}
+
+/* --------------------------------------------------------- presentation */
+
+.intro.surface-paper {
+  min-height: min(100svh, 62rem);
+  display: grid;
+  align-items: center;
+  padding-block: calc(var(--nav-h) + 3rem) 5rem; /* bottom room for the photo drop-shadow */
+  --intro-accent: var(--moss);
+  --intro-halo: color-mix(in srgb, var(--forest) 14%, transparent);
+  --intro-shade: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.wave > .wrap {
+  position: relative;
+  z-index: 1;
+}
+
+/* centered column: the photo sits above the title and covers a thin strip of its lower edge */
+.intro__layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr); /* the nowrap title can no longer widen the track and push it right */
+  justify-items: center;
+  --intro-title-size: calc(clamp(2.25rem, 1rem + 8.5vw, 9rem) * var(--display-scale));
+}
+
+.intro__photo {
+  position: relative;
+  z-index: 2; /* above .intro__inner (z-index 1): the feeder covers the top of the letters */
+  pointer-events: none;
+}
+
+.intro::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(45% 60% at 78% 52%, var(--intro-halo), transparent 70%),
+    radial-gradient(90% 70% at 50% 120%, var(--intro-shade), transparent 70%),
+    radial-gradient(35% 45% at 8% 100%, color-mix(in srgb, var(--sky-deep) 9%, transparent), transparent 70%);
+  /* fade every glow to nothing before the section edge: no cut against the hero below */
+  -webkit-mask-image: linear-gradient(180deg, var(--ink) 55%, transparent 100%);
+  mask-image: linear-gradient(180deg, var(--ink) 55%, transparent 100%);
+}
+
+.intro__photo {
+  /* title first; the photo rises over the lower ~30% of the letters (z-index 2 above the title) */
+  margin: calc(var(--intro-title-size) * -0.3) 0 0;
+  aspect-ratio: 4 / 5;
+  max-height: 76.5svh;
+  justify-self: center;
+  width: min(90%, 33.3rem);
+}
+
+.intro__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 24px 36px var(--intro-shade));
+}
+
+.intro__slot {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  text-align: center;
+  font-size: var(--t-sm);
+  color: var(--muted);
+  background: transparent;
+  border: 2px dashed var(--forest);
+  border-radius: 6px;
+}
+
+.intro__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+
+.intro__title {
+  font-size: var(--intro-title-size);
+  white-space: nowrap;
+  margin: 0;
+  max-width: 100%;
+  text-align: center;
+}
+
+/* the last glyph keeps its tracking on the right: pull it back so the ink is centred */
+.intro__brand {
+  margin-right: -0.01em;
+}
+
+.intro__cue {
+  margin-top: clamp(1.5rem, 4vw, 3rem);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--t-sm);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule-strong);
+  padding-bottom: 4px;
+}
+
+.intro__cue:hover {
+  border-color: var(--forest);
+}
+
+/* -------------------------------------------------------- reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .split__word,
+  .ghost__text {
+    transform: none !important;
+    transition: none !important;
+  }
+  .loader {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------- build (sticky) */
+
+.build {
+  padding: 0.75rem;
+  --wave-bg: var(--forest);
+  --wave-dot: var(--paper);
+}
+
+.build__frame {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  border-radius: 2rem;
+}
+
+.build__frame:not(:has(.build__track)) {
+  padding-block: var(--section-y);
+}
+
+@media (max-width: 760px) {
+  .build {
+    padding: 0.5rem;
+  }
+  .build__frame {
+    border-radius: 1.5rem;
+  }
+}
+
+/* Double ring (ink outer, paper inner) for focusable things on the orange card. */
+.build__frame :is(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--paper);
+}
+
+.build__track {
+  position: relative;
+  height: calc(100vh + var(--build-steps, 8) * 55vh);
+}
+
+.build__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: var(--nav-h);
+}
+
+.build__stage .section-head {
+  margin-bottom: clamp(16px, 3vh, 36px);
+  gap: 10px;
+}
+
+/* Title leaves once the steps start; it stays in the DOM for screen readers. */
+.build__head {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 0.45s ease;
+}
+
+.build__head-in {
+  min-height: 0;
+  overflow: hidden;
+  transition: opacity 0.3s ease, transform 0.45s ease;
+}
+
+.build__stage[data-phase="steps"] .build__head {
+  grid-template-rows: 0fr;
+}
+
+.build__stage[data-phase="steps"] .build__head-in {
+  opacity: 0;
+  transform: translateY(-1.5rem);
+}
+
+.build__stage .build__wrap {
+  max-width: none;
+  padding-inline: clamp(16px, 2.5vw, 40px);
+}
+
+.build__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 72px);
+  align-items: center;
+}
+
+.build__grid--single {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 46rem;
+  margin-inline: auto;
+}
+
+/* ------------------------------------------------------- Carousel */
+
+.build__carousel {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: clamp(12px, 2vw, 28px);
+  align-items: center;
+  max-width: 68rem;
+  margin: 0 auto;
+}
+
+.build__nav {
+  width: clamp(40px, 4vw, 52px);
+  height: clamp(40px, 4vw, 52px);
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--fg) 25%, transparent);
+  background: color-mix(in srgb, var(--fg) 6%, transparent);
+  color: var(--fg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease, opacity 0.25s ease;
+  z-index: 3;
+}
+
+.build__nav:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--fg) 14%, transparent);
+  border-color: color-mix(in srgb, var(--fg) 55%, transparent);
+  transform: translateY(-1px);
+}
+
+.build__nav:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.build__nav:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+.build__nav:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 3px;
+}
+
+.build__slides {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  min-height: clamp(260px, 42vh, 460px);
+  overflow: hidden;
+  border-radius: 18px;
+  isolation: isolate;
+}
+
+.build__slide {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  border-radius: 18px;
+  overflow: hidden;
+  transform-origin: center;
+  transition:
+    transform 0.55s var(--ease-in-out-cubic, cubic-bezier(0.65, 0, 0.35, 1)),
+    opacity 0.45s ease,
+    filter 0.55s ease;
+  will-change: transform, opacity;
+  background: color-mix(in srgb, var(--forest) 70%, var(--ink));
+  box-shadow: 0 30px 80px -40px rgba(0, 0, 0, 0.6);
+}
+
+.build__slide[data-state="active"] {
+  transform: translate3d(0, 0, 0) scale(1);
+  opacity: 1;
+  filter: none;
+  z-index: 2;
+}
+
+.build__slide[data-state="near"] {
+  transform: translate3d(calc(var(--offset) * 58%), 0, 0) scale(0.88);
+  opacity: 0.35;
+  filter: saturate(0.85) brightness(0.9);
+  z-index: 1;
+}
+
+.build__slide[data-state="far"] {
+  transform: translate3d(calc(var(--offset) * 72%), 0, 0) scale(0.75);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.build__slide-media {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--forest) 55%, var(--ink));
+}
+
+.build__slide-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.01);
+  transition: transform 6s ease-out;
+}
+
+.build__slide[data-state="active"] .build__slide-media img {
+  transform: scale(1.04);
+}
+
+.build__slide-glyph {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: color-mix(in srgb, var(--paper) 55%, transparent);
+  background:
+    radial-gradient(60% 60% at 50% 45%, color-mix(in srgb, var(--paper) 10%, transparent), transparent 70%),
+    linear-gradient(135deg, color-mix(in srgb, var(--forest) 90%, var(--ink)) 0%, color-mix(in srgb, var(--forest) 60%, var(--ink)) 100%);
+}
+
+.build__slide-shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+.build__slide-num {
+  position: absolute;
+  top: clamp(12px, 1.6vw, 20px);
+  left: clamp(14px, 1.8vw, 22px);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.2rem, 1.2rem + 2.2vw, 3.4rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--paper);
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+.build__slide-copy {
+  position: relative;
+  padding: clamp(14px, 2vw, 22px) clamp(16px, 2.4vw, 28px) clamp(18px, 2.4vw, 26px);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--ink) 65%, transparent) 0%, var(--ink) 100%);
+  color: var(--paper);
+  display: grid;
+  gap: 0.35rem;
+}
+
+.build__slide-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 0.95rem + 1vw, 1.9rem);
+  line-height: 1.15;
+  margin: 0;
+  color: var(--paper);
+}
+
+.build__slide-text {
+  margin: 0;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+  font-size: clamp(0.92rem, 0.85rem + 0.25vw, 1.02rem);
+  line-height: 1.5;
+  max-width: 54ch;
+}
+
+@media (max-width: 720px) {
+  .build__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 4;
+  }
+  .build__nav--prev {
+    left: 6px;
+  }
+  .build__nav--next {
+    right: 6px;
+  }
+  .build__carousel {
+    display: block;
+  }
+  .build__slide[data-state="near"] {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .build__slide,
+  .build__slide-media img {
+    transition: opacity 0.2s linear;
+    transform: none !important;
+  }
+  .build__slide[data-state="near"],
+  .build__slide[data-state="far"] {
+    opacity: 0;
+  }
+}
+
+.build__dock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 2vw, 24px);
+  margin-top: clamp(14px, 2vh, 22px);
+}
+
+.build__counter {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--fg) 70%, transparent);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 0.95rem;
+}
+
+.build__counter strong {
+  color: var(--fg);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.build__counter span:last-child {
+  color: color-mix(in srgb, var(--fg) 50%, transparent);
+}
+
+.build__panel {
+  display: grid;
+  gap: 1.5rem;
+  min-height: 16rem;
+  align-content: start;
+}
+
+.build__card {
+  display: grid;
+  gap: 0.75rem;
+  animation: build-in 0.3s ease-out;
+}
+
+.build__num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(3.5rem, 2.2rem + 4.6vw, 6rem);
+  line-height: 0.82;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+}
+
+.build__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 1rem + 1.2vw, 2.1rem);
+  line-height: 1.1;
+}
+
+.build__text {
+  max-width: 38rem;
+  color: var(--muted);
+}
+
+/* BUG-052: darker secondary text on the grain-veiled orange card (>=4.5:1 at darkest grain pixel). */
+.surface-cube .build__text {
+  color: color-mix(in srgb, var(--paper) 90%, var(--forest));
+}
+
+.build__dots {
+  display: flex;
+  gap: 0.4rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+}
+
+.build__dot {
+  display: block;
+  width: 1.8rem;
+  height: 10px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.build__dot::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--fg) 22%, transparent);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.build__dot:hover::before {
+  background: color-mix(in srgb, var(--fg) 50%, transparent);
+}
+
+.build__dot[data-state="done"]::before {
+  background: color-mix(in srgb, var(--fg) 55%, transparent);
+}
+
+.build__dot[data-state="now"] {
+  width: 2.6rem;
+}
+
+.build__dot[data-state="now"]::before {
+  background: var(--fg);
+  height: 4px;
+}
+
+.build__dot:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@keyframes build-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .build__card {
+    animation: none;
+  }
+  .build__dot,
+.build__head,
+.build__head-in {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------- S6 What's inside */
+
+/* Wider like S5: less side padding, content close to the edge. */
+.inside > .wrap{
+  max-width: none;
+  padding-inline: clamp(16px, 2.5vw, 40px);
+}
+
+/* ------------------------------------------------------------ team panel */
+.section .people {
+  position: relative;
+  display: grid;
+  box-sizing: border-box;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: -0.75rem; /* padding gives the focus ring room inside the clip */
+  padding: 0.75rem;
+  overflow: hidden;
+  list-style: none;
+  transition: height 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.section .person {
+  position: relative;
+  z-index: 0;
+  display: block;
+  transition:
+    transform 0.5s cubic-bezier(0.65, 0, 0.35, 1),
+    opacity 0.5s ease,
+    visibility 0s;
+}
+
+@media (max-width: 860px) {
+  .section .people {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .section .people {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.person[data-state="open"] {
+  z-index: 5;
+  grid-column: 1 / -1;
+}
+
+.person[data-state="open"] .person__photo,
+.person[data-state="open"] .person__name {
+  display: none;
+}
+
+.person[data-state="away"] {
+  position: absolute; /* top/left/width/height inline: the measured grid cell */
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(0.8);
+  transition:
+    transform 0.5s cubic-bezier(0.65, 0, 0.35, 1),
+    opacity 0.5s ease,
+    visibility 0s linear 0.5s;
+}
+
+.section .person__photo {
+  margin-bottom: 0;
+  max-width: none;
+  display: grid;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  padding: 0;
+  place-items: center;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: var(--radius-box);
+  background: var(--ivory);
+  color: inherit;
+  cursor: pointer;
+}
+
+.person__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.person__hint {
+  padding: 1rem;
+  font-size: var(--t-sm);
+}
+
+.person__photo:hover {
+  border-color: var(--forest);
+}
+
+.person__photo:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px var(--ink); /* ink gap keeps the ring visible over a light photo */
+}
+
+.team-panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+  padding: 1.25rem;
+  border: 1px solid var(--forest);
+  border-radius: var(--radius-box);
+  background: var(--ink);
+  color: var(--paper);
+  font-size: var(--t-sm);
+}
+
+.team-panel__text {
+  order: 2;
+  max-width: 70ch;
+  padding: 1.25rem 1.5rem;
+}
+
+.team-panel__media {
+  display: grid;
+  min-width: 0;
+  place-items: center;
+}
+
+.team-panel__media img {
+  display: block;
+  width: 100%;
+  max-height: 24rem;
+  border-radius: var(--radius-box);
+  object-fit: contain;
+}
+
+@media (min-width: 900px) {
+  .team-panel {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+    animation: team-grow 0.5s cubic-bezier(0.65, 0, 0.35, 1) both;
+  }
+
+  .team-panel__text {
+    order: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section .people,
+  .section .person,
+  .person[data-state="away"] {
+    transition: none;
+    transform: none;
+  }
+
+  .team-panel {
+    transition: none;
+    animation: none;
+  }
+}
+
+@keyframes team-grow {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+.team-panel__name {
+  margin: 0 2.5rem 0.75rem 0;
+  font-size: var(--t-xl);
+}
+
+.team-panel__sub {
+  margin: 1.25rem 0 0.5rem;
+  font-size: var(--t-md);
+}
+
+.team-panel__facts {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.6rem 1rem;
+  margin: 0;
+}
+
+.team-panel__facts--stack {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.team-panel__facts dd {
+  margin: 0;
+}
+
+.team-panel__facts dt {
+  font-weight: 600;
+}
+
+.team-panel__line,
+.team-panel__link {
+  display: block;
+}
+
+.team-panel__link {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.team-panel__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  place-items: center;
+  border: 1px solid var(--forest);
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.team-panel__close:focus-visible,
+.team-panel__link:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------- pages: nav + new sections */
+
+/* Secondary menu: quieter than the page pills (plain text, smaller, no border). */
+.nav__sub {
+  display: none;
+}
+
+@media (min-width: 1081px) {
+  .nav__sub {
+    display: block;
+  }
+}
+
+.nav__sub-inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 4px;
+}
+
+.nav__sub .nav__link--sub {
+  padding: 4px 10px;
+  color: var(--fg);
+  font-size: var(--t-xs, 0.8125rem);
+  font-weight: 500;
+  opacity: 0.8;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 60%, transparent);
+}
+
+.nav__sub .nav__link--sub:hover,
+.nav__sub .nav__link--sub[aria-current] {
+  opacity: 1;
+}
+
+.nav__sub .nav__link--sub:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  opacity: 1;
+}
+
+.nav__rule {
+  width: 100%;
+  margin: 8px 0;
+  border: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.nav__sheet .nav__link--sub {
+  font-size: var(--t-md);
+  color: var(--muted);
+}
+
+.phase2__working {
+  margin: 1rem 0 0;
+  color: var(--muted);
+}
+
+/* Home phases preview: link to Phase 1. */
+.build__cta {
+  margin-top: 20px;
+  padding: 8px 20px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+  backdrop-filter: saturate(1.4) blur(14px);
+  color: var(--fg);
+  font-family: var(--font);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.build__cta:hover,
+.build__cta:focus-visible,
+.build__cta:visited {
+  text-decoration: none;
+}
+
+.build__cta:hover {
+  border-color: var(--fg);
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.build__cta:active {
+  opacity: 0.85;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .build__cta {
+    transition: none;
+  }
+}
+
+.build__cta:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 3px;
+}
+
+/* Always on screen: inside the sticky stage (pinned) or a sticky bar (static). */
+.build__cta-bar {
+  position: sticky;
+  bottom: 16px;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+  pointer-events: none;
+}
+
+.build__cta-bar .build__cta {
+  margin-top: 0;
+  pointer-events: auto;
+}
+
+.build__panel > .build__cta {
+  justify-self: start;
+  margin-top: 0;
+}
+
+/* Cut-out window: the orange card and its grain are masked where the model sits (vars set by Build.jsx). */
+@supports (mask-composite: exclude) {
+  .build__frame[data-hole].surface-cube {
+    background-color: transparent;
+  }
+  .build__frame[data-hole]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    border-radius: inherit;
+    pointer-events: none;
+    background-color: var(--bg);
+  }
+  .build__frame[data-hole]::before,
+  .build__frame[data-hole]::after {
+    will-change: mask-position, mask-size;
+    mask-repeat: no-repeat;
+    mask-composite: exclude;
+    mask-image:
+      linear-gradient(var(--ink) 0 0),
+      linear-gradient(var(--ink) 0 0),
+      linear-gradient(var(--ink) 0 0),
+      radial-gradient(circle at 100% 100%, var(--ink) calc(var(--hole-r) - 0.5px), transparent var(--hole-r)),
+      radial-gradient(circle at 0 100%, var(--ink) calc(var(--hole-r) - 0.5px), transparent var(--hole-r)),
+      radial-gradient(circle at 100% 0, var(--ink) calc(var(--hole-r) - 0.5px), transparent var(--hole-r)),
+      radial-gradient(circle at 0 0, var(--ink) calc(var(--hole-r) - 0.5px), transparent var(--hole-r)),
+      linear-gradient(var(--ink) 0 0);
+    mask-size:
+      calc(var(--hole-w) - 2 * var(--hole-r)) var(--hole-h),
+      var(--hole-r) calc(var(--hole-h) - 2 * var(--hole-r)),
+      var(--hole-r) calc(var(--hole-h) - 2 * var(--hole-r)),
+      var(--hole-r) var(--hole-r),
+      var(--hole-r) var(--hole-r),
+      var(--hole-r) var(--hole-r),
+      var(--hole-r) var(--hole-r),
+      100% 100%;
+    mask-position:
+      calc(var(--hole-x) + var(--hole-r)) var(--hole-y),
+      var(--hole-x) calc(var(--hole-y) + var(--hole-r)),
+      calc(var(--hole-x) + var(--hole-w) - var(--hole-r)) calc(var(--hole-y) + var(--hole-r)),
+      var(--hole-x) var(--hole-y),
+      calc(var(--hole-x) + var(--hole-w) - var(--hole-r)) var(--hole-y),
+      var(--hole-x) calc(var(--hole-y) + var(--hole-h) - var(--hole-r)),
+      calc(var(--hole-x) + var(--hole-w) - var(--hole-r)) calc(var(--hole-y) + var(--hole-h) - var(--hole-r)),
+      0 0;
+  }
+}
+
+/* Home flora: one canvas with the real frame sequences (trees on both edges, leaves and sparrows in the background).
+   Fixed layer right above .backdrop (both z-index 0, flora later in the DOM), below the sections. Decorative only. */
+.flora {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Focus colour comes from --focus, set per surface (sky-soft on dark/green, sky-deep on light). */
+:is(a, button, input, summary, [tabindex], [role="button"]):focus-visible {
+  outline-color: var(--focus, var(--sky-deep));
+}
+/* Team grid: 3 per row, a short last row stays centred at the same width. */
+@media (min-width: 861px) {
+  .section .people {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .section .people .person {
+    grid-column: span 2;
+  }
+  .section .people .person:nth-last-child(2):nth-child(3n + 1) {
+    grid-column: 2 / span 2;
+  }
+  .section .people .person:last-child:nth-child(3n + 1) {
+    grid-column: 3 / span 2;
+  }
+  .section .people .person[data-state="open"]:is(:nth-child(n), :nth-last-child(n)) {
+    grid-column: 1 / -1;
+  }
+}
+
+.stub .people {
+  margin-bottom: clamp(1.5rem, 4vw, 3rem);
+}
+
+/* ------------------------------------------------- language selector */
+.nav__end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav__lang {
+  min-height: 44px;
+  padding: 8px 12px;
+  font: inherit;
+  font-size: var(--t-xs, 0.8125rem);
+  font-weight: 500;
+  color: var(--fg);
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.nav__lang option {
+  color: var(--ink);
+  background: var(--paper);
+}
+.nav__lang:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.nav__lang--sheet {
+  align-self: flex-start;
+  margin-top: 4px;
+}
+@media (max-width: 1080px) {
+  .nav__lang--bar {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------ contact */
+
+.contact .section-head {
+  max-width: 48rem;
+}
+
+.contact__lead {
+  color: color-mix(in srgb, var(--fg) 78%, transparent);
+  margin: 0.5rem 0 0;
+  font-size: var(--t-md);
+  line-height: 1.55;
+}
+
+.contact__form {
+  max-width: 44rem;
+  margin: 2.5rem auto 0;
+  display: grid;
+  gap: 1.1rem;
+}
+
+.contact__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.1rem;
+}
+
+@media (max-width: 640px) {
+  .contact__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.contact__field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.contact__label {
+  font-family: var(--font-text);
+  font-size: var(--t-sm);
+  color: color-mix(in srgb, var(--fg) 70%, transparent);
+  letter-spacing: 0.02em;
+}
+
+.contact__field input,
+.contact__field textarea {
+  font: inherit;
+  color: var(--fg);
+  background: color-mix(in srgb, var(--paper) 55%, transparent);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  padding: 0.7rem 0.85rem;
+  width: 100%;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.contact__field textarea {
+  resize: vertical;
+  min-height: 7.5rem;
+  line-height: 1.5;
+}
+
+.contact__field input::placeholder,
+.contact__field textarea::placeholder {
+  color: color-mix(in srgb, var(--fg) 40%, transparent);
+}
+
+.contact__field input:focus-visible,
+.contact__field textarea:focus-visible {
+  outline: none;
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 25%, transparent);
+  background: var(--paper);
+}
+
+.contact__field [aria-invalid="true"] {
+  border-color: color-mix(in srgb, #a33 65%, var(--rule-strong));
+}
+
+.contact__error {
+  color: #a33;
+  font-size: var(--t-xs);
+}
+
+.contact__actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+
+.contact__send {
+  font: inherit;
+  cursor: pointer;
+  border: 0;
+  background: var(--forest);
+  color: var(--paper);
+  padding: 0.75rem 1.6rem;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+  transition:
+    background-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.contact__send:hover {
+  background: var(--forest-deep);
+}
+
+.contact__send:active {
+  transform: translateY(1px);
+}
+
+.contact__send:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.contact__status {
+  font-size: var(--t-sm);
+  color: color-mix(in srgb, var(--fg) 70%, transparent);
+}
+
+.contact__fallback {
+  margin: 0.25rem 0 0;
+  font-size: var(--t-sm);
+  color: color-mix(in srgb, var(--fg) 70%, transparent);
+}
+
+.contact__fallback a {
+  color: var(--sky-deep);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

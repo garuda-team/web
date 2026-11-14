@@ -1,0 +1,60 @@
+# Dependencies
+node_modules/
+dist/
+
+# IDE
+.idea/
+.vscode/
+
+# Claude Code (any level of the tree)
+CLAUDE*.md
+.claude/
+.mcp.json
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+lerna-debug.log*
+pnpm-debug.log*
+
+# Secrets and local config
+.env
+.env.*
+!.env.example
+*.local
+*.pem
+*.key
+*.p12
+.npmrc
+*.pfx
+*.p8
+
+# Test coverage
+coverage/
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+*~
+
+# Obsidian vault (if copied to repo)
+vault/
+
+# Internal docs (local only, not published)
+/PROJECT_STATE.md
+/docs/*
+!/docs/WORKFLOW.md
+
+# Tool caches
+.eslintcache
+.vite/
+dist-ssr/
+.npm/
+
+# Editor temp files
+*.swp
+*.swo
+.ai
