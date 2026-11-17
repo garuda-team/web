@@ -1,0 +1,55 @@
+/* Dev-only capture view (see components/ModelCapture.jsx). Not part of the production bundle. */
+.model-capture {
+  min-height: 100vh;
+  padding: 2rem clamp(1rem, 4vw, 3rem);
+  background: var(--paper);
+  color: var(--ink);
+}
+.model-capture__title {
+  margin: 0 0 0.5rem;
+}
+.model-capture__status {
+  margin: 0 0 1rem;
+}
+.model-capture__stage {
+  display: block;
+  width: min(100%, 960px);
+  height: auto;
+  aspect-ratio: 4 / 3;
+  background-color: var(--sand);
+  background-image: repeating-conic-gradient(var(--paper) 0% 25%, transparent 0% 50%);
+  background-size: 24px 24px; /* checkerboard: shows the transparency */
+  border: 1px solid var(--ink);
+}
+.model-capture__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.model-capture__btn {
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--ink);
+  background: var(--sand);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+.model-capture__btn:hover:not(:disabled) {
+  background: var(--ink);
+  color: var(--paper);
+}
+.model-capture__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.model-capture__btn:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+.model-capture__desc {
+  display: block;
+  font-size: 0.85em;
+}

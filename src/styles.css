@@ -28,6 +28,9 @@
   --sky-soft: #bfe3f2;
   --sky-mist: #eaf6fb;
 
+  /* Grass: soft green for chart series */
+  --grass: #7fb069;
+
   /* Text */
   --ink: var(--forest-deep);
 
@@ -56,6 +59,7 @@
 
   --max: 82rem;
   --gutter: clamp(1rem, 4vw, 3rem);
+  --build-media-max: 76vh;
   --nav-h: 4rem;
   --section-y: clamp(5.5rem, 12vw, 11rem);
   --radius: 0.25rem;
@@ -544,15 +548,6 @@ code {
 
 /* ---------------------------------------------------------------- phases */
 
-.phases {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 32px;
-}
-
 .phase {
   position: relative;
   display: grid;
@@ -585,19 +580,6 @@ code {
   background: repeating-linear-gradient(to right, var(--rule-strong) 0 6px, transparent 6px 12px);
 }
 
-.phase__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 12px;
-  color: var(--muted);
-  font-size: var(--t-xs);
-  font-weight: 640;
-}
-
-.phase__status {
-  color: var(--fg);
-}
-
 .phase__title {
   font-size: var(--t-lg);
   font-family: var(--font-display);
@@ -611,10 +593,6 @@ code {
 }
 
 @media (max-width: 900px) {
-  .phases {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0;
-  }
   .phase {
     grid-template-columns: 44px minmax(0, 1fr);
     column-gap: 20px;
@@ -1406,11 +1384,264 @@ code {
 .surface-cube .brand-mark,
 .nav.surface-ink .brand-mark,
 .nav.surface-cube .brand-mark,
-.nav.surface-steel .brand-mark,
-:root:not([data-page="home"]) .nav.surface-paper .brand-mark {
+.nav.surface-steel .brand-mark {
   filter: invert(1);
 }
 
 .team__logo {
   justify-self: start;
+}
+/* -------------------------------------------------------------- SDG */
+
+.footer__sdg {
+  padding-top: 0.5rem;
+}
+
+.footer__sdg-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer__sdg-link {
+  display: block;
+  border-radius: var(--radius);
+  outline-offset: 3px;
+}
+
+.footer__sdg-link:focus-visible {
+  outline: 2px solid var(--focus);
+}
+
+/* SDG logos are full-colour squares: never inverted on the ink ground. */
+.footer__sdg-logo {
+  display: block;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--radius);
+  object-fit: cover;
+}
+
+.sdg__head {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+  text-align: center;
+  padding-bottom: 2rem;
+}
+
+.sdg__emblem {
+  width: min(16rem, 60%);
+  height: auto;
+}
+
+.sdg__item {
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr);
+  gap: 1.5rem 2rem;
+  align-items: start;
+  padding-block: 2rem;
+  border-top: 1px solid var(--rule-strong);
+  scroll-margin-top: calc(var(--nav-h) + 2rem);
+}
+
+.sdg__logo {
+  width: 10rem;
+  height: 10rem;
+  border-radius: var(--radius);
+  object-fit: cover;
+}
+
+.sdg__num {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--t-sm);
+}
+
+.sdg__name {
+  margin: 0.25rem 0 1rem;
+  font-size: var(--t-xl);
+}
+
+.sdg__why-head {
+  margin: 0 0 0.25rem;
+  font-size: var(--t-sm);
+}
+
+.sdg__why {
+  margin: 0;
+  max-width: 60ch;
+}
+
+/* v2.css makes every surface dark; this page sits on the light backdrop, so it takes the light paper tokens. */
+:root[data-page="sdg"] {
+  --wave-bg: var(--sand);
+  --wave-dot: var(--forest);
+}
+
+:root[data-page="sdg"] .sdg.surface-paper {
+  --bg: var(--sand);
+  --bg-2: var(--linen);
+  --fg: var(--ink);
+  --muted: var(--forest);
+  --focus: var(--sky-deep);
+  --rule: var(--sand);
+  --rule-strong: var(--linen);
+  --panel: var(--paper);
+  --ghost: color-mix(in srgb, var(--ink) 5%, transparent);
+  color-scheme: light;
+}
+
+@media (max-width: 560px) {
+  .sdg__item {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .footer__sdg-logo {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+/* ------------------------------------------- software numbered rows */
+
+.sw-diagram {
+  margin-inline: auto;
+}
+
+.stub__sponsors {
+  margin: clamp(2rem, 5vw, 3.5rem) 0 0;
+}
+
+.stub__soon {
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+}
+
+.stub__rows {
+  list-style: none;
+  margin: clamp(2rem, 5vw, 3.5rem) 0 0;
+  padding: 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.stub__row {
+  display: grid;
+  grid-template-columns: clamp(4.5rem, 3rem + 7vw, 9rem) minmax(0, 1fr);
+  column-gap: clamp(1rem, 3vw, 2.5rem);
+  row-gap: 0.5rem;
+  align-items: baseline;
+  padding: clamp(1.5rem, 3vw, 2.5rem) 0;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.stub__row-num {
+  grid-row: 1 / span 2;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(3rem, 2rem + 4vw, 6rem);
+  line-height: 0.85;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+}
+
+.stub__row-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  font-size: clamp(1.75rem, 1.2rem + 2.2vw, 3.25rem);
+  line-height: 1.05;
+  letter-spacing: var(--display-track);
+}
+
+.stub__row-text {
+  margin: 0;
+  max-width: 44rem;
+  color: var(--muted);
+  font-size: var(--t-md);
+  line-height: 1.55;
+}
+
+@media (min-width: 48rem) {
+  .stub__row {
+    width: 88%;
+  }
+
+  .stub__row:nth-child(even) {
+    margin-left: auto;
+    grid-template-columns: minmax(0, 1fr) clamp(4.5rem, 3rem + 7vw, 9rem);
+  }
+
+  .stub__row:nth-child(even) .stub__row-num {
+    grid-column: 2;
+    text-align: right;
+  }
+
+  .stub__row:nth-child(even) .stub__row-title,
+  .stub__row:nth-child(even) .stub__row-text {
+    grid-column: 1;
+    text-align: right;
+  }
+
+  .stub__row:nth-child(even) .stub__row-text {
+    margin-left: auto;
+  }
+}
+
+/* ------------------------------------------------- cookie notice */
+
+.cookie-notice {
+  position: static;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  padding: 0.9rem clamp(1rem, 4vw, 2.5rem) 0;
+  border: 1px solid var(--rule-strong);
+  border-width: 1px 0 0;
+  background: transparent;
+  color: var(--fg);
+  font-size: var(--t-xs);
+  line-height: 1.45;
+}
+
+.cookie-notice__body {
+  flex: 1;
+}
+
+.cookie-notice__title {
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+
+.cookie-notice__text {
+  margin: 0;
+}
+
+.cookie-notice__close {
+  flex: none;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--sage);
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.cookie-notice__close:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Focus target after a page change: moved by script, so no ring on the container itself. */
+main:focus {
+  outline: none;
 }

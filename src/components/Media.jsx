@@ -65,7 +65,7 @@ export function Thumb({ item, alt }) {
   }
   return (
     <span className="thumb">
-      <img src={item.url} alt={alt || ""} loading="lazy" decoding="async" />
+      <img src={item.url} referrerPolicy="no-referrer" alt={alt || ""} loading="lazy" decoding="async" />
     </span>
   );
 }

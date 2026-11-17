@@ -54,8 +54,17 @@ export function startingWithV2(dir, n) {
   return inV2Folder(dir).filter((x) => re.test(x.base));
 }
 
+/** First image of an SDG logo (folder sdg, file number n). */
+export const sdgLogo = (n) => startingWithV2("sdg", n).find((x) => x.type === "image");
+
 /** Files in a folder (last path segment) whose name starts with the number n (01, 1, 01b ...). */
 export function startingWith(folder, n) {
   const re = new RegExp(`^0*${n}(?!\\d)`);
   return all.filter((x) => x.folder === folder).filter((x) => re.test(x.base));
+}
+
+/** Files in a folder (last path segment) whose name is exactly `name` (case-insensitive), e.g. "monitoring_AI". */
+export function named(folder, name) {
+  const want = name.toLowerCase();
+  return all.filter((x) => x.folder === folder && x.base.toLowerCase() === want);
 }

@@ -2,17 +2,6 @@
   Traducción al castellano. Parcial: lo que falte cae al inglés (content.js).
 */
 
-const previewLinesEs = [
-  ["El problema", "Las cotorras argentinas, invasoras, compiten con los gorriones comunes, autóctonos, por la comida y los nidos."],
-  ["Dos compartimentos", "El compartimento A es para las aves autóctonas y el B lleva comida tratada para la especie invasora."],
-  ["Visión por computador", "La cámara identifica al ave y los actuadores abren el compartimento adecuado."],
-  ["Monitorización acústica", "Un micrófono identifica los cantos y construye un mapa sonoro."],
-  ["Cantos autóctonos", "Un altavoz reproduce cantos autóctonos para favorecer a los gorriones y a otras especies amenazadas."],
-  ["Privacidad desde el diseño", "La imagen y el audio se quedan en el dispositivo, y solo se detectan aves."],
-  ["Modelos", "Unos modelos de imagen y audio creados con Edge Impulse distinguen las dos especies."],
-  ["Futuro", "Servidores, una web de visualización, cámara activada por movimiento y más especies."],
-];
-
 export default {
   site: {
     openPhoto: "Abrir foto: {caption}",
@@ -31,33 +20,47 @@ export default {
   },
   team: {
     title: "Quiénes somos",
-    members: Array.from({ length: 5 }, () => ({
-      name: "[Nombre Apellido]",
-      role: "[Rol en el proyecto]",
-      background: "[Formación]",
-      from: "[Ciudad, país]",
-    })),
-    reflections: [
-      {
-        title: "Lo que aprendimos",
-        text: "[Escribe tres o cuatro frases. ¿Qué os sorprendió al construir el prototipo?]",
-      },
-      {
-        title: "Cómo trabajamos en equipo",
-        text: "[¿Cómo repartisteis el trabajo? ¿Qué funcionó bien y qué organizaríais de otra forma?]",
-      },
-      {
-        title: "Qué haríamos de otra manera",
-        text: "[Si empezarais de nuevo mañana, ¿qué cambiaríais?]",
-      },
+    members: [
+    {
+      name: "Ivan Garcia Berral",
+      role: "Líder de proyecto",
+      education: "Ingeniero Industrial",
+      links: { linkedin: "https://www.linkedin.com/in/ivan-garc%C3%ADa-berral/" },
+    },
+    {
+      name: "Federico Pompeo Teva",
+      role: "Líder de Hardware y Software",
+      education: "Ingeniero de Sistemas Aeroespaciales y UAV",
+      links: { linkedin: "https://www.linkedin.com/in/federicopompeoteva" },
+    },
+    {
+      name: "Alex Veciana Garcia",
+      role: "Hardware",
+      education: "Ingeniero Electrónico",
+      links: { linkedin: "https://www.linkedin.com/in/alexandre-veciana/" },
+    },
+    {
+      name: "Marc Montaner Roldan",
+      role: "Hardware",
+      education: "Ingeniero Electrónico",
+      links: { linkedin: "https://www.linkedin.com/in/marc-montaner-roldan/" },
+    },
+    {
+      name: "Pablo Ruiz Perez",
+      role: "Software",
+      education: "Ingeniero Informático",
+      links: { linkedin: "https://www.linkedin.com/in/pablo-ruiz-perez/" },
+    },
     ],
   },
   brand: {
     scroll: "Desplázate para ver cómo funciona",
   },
   ghosts: {
-    project: "Hoja de ruta",
     build: "Construcción",
+    steps: "Paso a paso",
+    roadmap: "Hoja de ruta",
+    stats: "Stats",
     team: "Equipo",
     contact: "Contacto",
     stubs: {
@@ -67,6 +70,9 @@ export default {
     },
   },
   ui: {
+    pageLoading: "Cargando página…",
+    pageError: "No se ha podido cargar esta página.",
+    pageRetry: "Reintentar",
     placeholderHint: "Marcador de posición: sustitúyelo en content.js",
     intro: {
       photoAlt: "Comedero inteligente Garuda: un armario de madera estilizado con una antena",
@@ -83,10 +89,13 @@ export default {
         { label: "Inicio" },
         { label: "Hardware" },
         { label: "Software" },
+        { label: "Stats" },
         { label: "Equipo y patrocinadores" },
+        { label: "ODS" },
       ],
       links: {
-        "/": { project: "Hoja de ruta", phases: "Etapas", team: "Quiénes somos", contact: "Contacto" },
+        "/": { roadmap: "Hoja de ruta", phases: "Paso a paso", contact: "Contacto" },
+        "/sdg": { "sdg-7": "ODS 7", "sdg-9": "ODS 9", "sdg-11": "ODS 11", "sdg-12": "ODS 12", "sdg-15": "ODS 15" },
       },
     },
     softwareDiagram: {
@@ -108,7 +117,7 @@ export default {
         sections: [
           {
             title: "Dispositivos",
-            text: "Cada comedero procesa la imagen y el sonido en el propio aparato. Solo salen datos agregados —la especie detectada, el momento, un conteo— y nunca la imagen o el audio en bruto. Así protegemos la privacidad desde el diseño.",
+            text: "Cada comedero tiene una cámara que captura un fotograma. El fotograma se envía cifrado por 4G a un servidor, donde lo procesa la IA. No se guarda nada en el dispositivo ni se conserva la imagen: solo el registro de detección. Así protegemos la privacidad desde el diseño.",
           },
           {
             title: "Conexión segura",
@@ -116,7 +125,7 @@ export default {
           },
           {
             title: "Procesamiento y datos",
-            text: "En la nube validamos y enriquecemos lo que llega: asociamos cada mensaje a su casita y a su ubicación, y guardamos tanto el histórico completo, por si hace falta repasarlo, como la versión ya resumida para el día a día.",
+            text: "En el servidor procesamos cada fotograma con IA y generamos un registro de detección, que es lo que muestra la web. Asociamos cada detección a su casita y a su ubicación, y guardamos tanto el histórico completo, por si hace falta repasarlo, como la versión ya resumida para el día a día.",
           },
           {
             title: "Web de visualización",
@@ -128,11 +137,7 @@ export default {
           },
         ],
       },
-      team: { title: "Equipo y patrocinadores", text: "[Página de equipo y patrocinadores: pendiente]" },
-    },
-    project: {
-      phase: "Etapa {n}. ",
-      status: { done: "Hecho", current: "En curso" },
+      team: { title: "Equipo", sponsorsTitle: "Patrocinadores", sponsorsSoon: "Próximamente" },
     },
     team: {
       more: "Más sobre {name}",
@@ -141,11 +146,7 @@ export default {
       logoAlt: "Logotipo del equipo Garuda",
       close: "Cerrar",
       role: "Rol en el equipo",
-      education: "Formación",
-      links: "Enlaces",
-      linksGap: "[Enlaces de LinkedIn y GitHub]",
-      reflections: "Reflexiones",
-      reflectionGap: "[Respuesta de este miembro del equipo]",
+      education: "Titulación",
       newTab: " (se abre en una pestaña nueva)",
     },
     lightbox: {
@@ -163,6 +164,82 @@ export default {
       progress: "Progreso",
       explore: "Explora el prototipo",
       goTo: "Paso {n} de {total}",
+      flip: "Girar",
+      flipBack: "Ver anverso",
+      flipLabel: "Girar la tarjeta: {title}",
+      cardOf: "Paso {n} de {total}",
+      prev: "Paso anterior",
+      next: "Paso siguiente",
+    },
+    highlights: {
+      stats: { cta: "Ver Estadísticas", title: "Estadísticas", loading: "Cargando cifras…", error: "No se pudieron cargar las cifras. Puedes verlas en la página de Estadísticas." },
+    },
+    statsPage: {
+      kpis: "Cifras clave",
+      chart: "Gráfico",
+      chartLoading: "Cargando gráfico…",
+      chartAria: "Gráfico: {title}",
+      dataTable: "Tabla de datos de este gráfico",
+      unit: "Unidad",
+      projection: "Proyección",
+      noData: "Sin datos",
+      range: "Rango",
+      rangeNote: "Barra discontinua: rango entre mínimo y máximo, sin valor central.",
+      boundNote: "significa \"más de\": la cifra es un mínimo.",
+      fields: { mark: "Nota", low: "Mínimo", high: "Máximo", year: "Año", label: "Categoría", group: "Grupo", value: "Valor", mean: "Media", total: "Total", annualAverage: "Media anual", amount: "Importe", springSince2002: "Primavera, desde 2002", winterSince2002: "Invierno, desde 2002" },
+      legend: "Mostrar u ocultar series",
+      seriesPicker: "Elegir serie de datos",
+      viewTable: "Ver como tabla",
+      sources: "Fuentes",
+      sourcesOf: "Fuentes de esta tabla",
+      also: "Véase también",
+      glossary: "Glosario",
+      warning: "Aviso",
+      info: "Nota",
+      notes: "Notas",
+      external: "(se abre en una pestaña nueva)",
+      units: { individuals: "individuos", index: "índice (2005 = 1)", percent: "%", percentPerYear: "% por año", count: "recuento", MEUR: "millones de euros", EUR: "euros" },
+    },
+    sdg: {
+      title: "Objetivos de Desarrollo Sostenible",
+      lead: "Los cinco Objetivos de Desarrollo Sostenible (ODS) de la ONU a los que contribuye Garuda.",
+      goal: "ODS {n}",
+      whyHead: "Por qué contribuimos",
+      emblemAlt: "Emblema de los Objetivos de Desarrollo Sostenible de las Naciones Unidas",
+      logoAlt: "Logotipo del ODS {n}",
+      footerTitle: "Objetivos de Desarrollo Sostenible",
+      items: [
+        {
+          n: 7,
+          title: "Energía asequible y no contaminante",
+          why: "El comedero funciona con un panel solar, una fuente de energía renovable, de modo que puede operar durante mucho tiempo en entornos remotos sin depender de la red eléctrica.",
+        },
+        {
+          n: 9,
+          title: "Industria, innovación e infraestructura",
+          why: "Garuda es una solución propia de hardware y software que combina IA en el borde, conectividad 4G remota y un diseño modular. Es una infraestructura tecnológica innovadora para gestionar el medio natural.",
+        },
+        {
+          n: 11,
+          title: "Ciudades y comunidades sostenibles",
+          why: "Garuda ayuda a gestionar especies invasoras en entornos urbanos y periurbanos. Así protege la biodiversidad local, además de la salud y la seguridad de las comunidades que viven en ellos.",
+        },
+        {
+          n: 12,
+          title: "Producción y consumo responsables",
+          why: "El comedero se construye con materiales sostenibles y se diseña para poder reparar y reutilizar sus piezas. Su comedero multiespecie funciona sin consumibles de un solo uso.",
+        },
+        {
+          n: 15,
+          title: "Vida de ecosistemas terrestres",
+          why: "Garuda detecta especies invasoras y permite actuar sobre ellas de forma selectiva. De este modo protege la fauna autóctona y los ecosistemas de los que depende.",
+        },
+      ],
+    },
+    cookies: {
+      title: "Cookies y almacenamiento",
+      text: "Esta web no usa cookies de seguimiento ni de analítica. Solo guarda en tu navegador tu preferencia de idioma y que has cerrado este aviso (almacenamiento técnico).",
+      close: "Cerrar aviso",
     },
     footer: {
       tagline: "Comederos inteligentes para una avifauna urbana equilibrada.",
@@ -172,7 +249,9 @@ export default {
       top: "Volver arriba",
       links: {
         roadmap: "Hoja de ruta",
-        stages: "Etapas",
+        phases: "Paso a paso",
+        hardware: "Hardware",
+        software: "Software",
         team: "Quiénes somos",
         contact: "Contáctanos",
       },
@@ -194,20 +273,19 @@ export default {
       invalidEmail: "Correo no válido",
     },
   },
-  projectV2: {
+  roadmap: {
     title: "Del prototipo a la red de ciudad.",
-    lead:
-      "Garuda es un prototipo que sigue creciendo. Aquí mostramos lo que hace hoy y lo que planeamos añadir. [Contexto del proyecto: pendiente]",
-    phases: [
-      { title: "Prototipo", text: "Un comedero con dos compartimentos, una cámara, un micrófono y un altavoz, construido en torno a una Arduino Uno Q." },
-      { title: "Modelos y pruebas de campo", text: "[Pendiente]" },
-      { title: "Servidores y web", text: "Servidores separados (API y base de datos, y una web de visualización), con datos enviados por API desde cada placa." },
-      { title: "Más especies e integración en la ciudad", text: "Más especies, un altavoz de alta fidelidad e integración con otros productos de la ciudad." },
+    currentLabel: "Hito actual",
+    quarters: [
+      { label: "Q4 2026", current: true, items: ["Elaboración del MVP", "Acotar las métricas del negocio", "Participación en Industrial Tech"] },
+      { label: "Q1 2027", items: ["Lanzamiento de las primeras pruebas piloto", "Búsqueda de inversores y subvenciones", "Preparar el lanzamiento en serie"] },
+      { label: "Q2 2027", items: ["Análisis de los datos aportados por las pruebas piloto", "Optimización y mejora del producto"] },
+      { label: "Q3 2027", items: ["Lanzamiento oficial del servicio", "Ampliación del equipo", "Estudio de la afectación a otras especies invasoras"] },
     ],
   },
   phasesPreview: {
     title: "Garuda, paso a paso",
-    phase2: { title: "Etapa 2", text: "Estamos en ello..." },
-    steps: previewLinesEs.map(([title, text]) => ({ title, text })),
+    privacy: {"title": "Adónde van los datos", "flow": [{"label": "Cámara", "note": "Captura un fotograma"}, {"label": "Fotograma", "note": "Se envía cifrado por 4G, no por wifi"}, {"label": "Servidor", "note": "Procesa el fotograma; la imagen no se guarda"}, {"label": "Registro de detección", "note": "Lo único que se almacena"}, {"label": "Web", "note": "Muestra el registro de detección"}], "kept": "Se guarda", "list": "Flujo de privacidad, paso a paso"},
+    steps: [{"title": "El problema", "text": ["La cotorra de pecho gris (Myiopsitta monachus) es una especie invasora que se ha expandido de forma notable por el área metropolitana de Barcelona. Compite con las especies autóctonas, y sus nidos dañan el arbolado, los cultivos y las infraestructuras, por lo que el ecosistema urbano y periurbano pierde biodiversidad. Hoy el seguimiento y el control de la población se hacen sobre todo de forma manual, con datos dispersos y poca capacidad de reacción por parte de ayuntamientos y entidades. Falta una herramienta que permita saber con precisión dónde están las cotorras, cuántas hay y cómo evoluciona la población, sin depender de recuentos puntuales."], "image": {"alt": "Gorriones comunes"}}, {"title": "Cómo lo resolvemos", "text": ["Garuda es un dispositivo inteligente que combina monitorización y control de la especie invasora en un solo punto. Incorpora una cámara con inteligencia artificial que identifica automáticamente cada ave que se acerca, por ejemplo si es una cotorra o un gorrión, y le asigna un nivel de confianza.", "Por un lado, Garuda actúa de forma pasiva: cada detección genera datos continuos sobre la presencia, la distribución y la actividad de la especie invasora. Con esta información, administraciones y entidades pueden hacer un seguimiento poblacional preciso, detectar nuevas zonas de expansión y evaluar el efecto de las medidas aplicadas, sin depender de recuentos manuales puntuales.", "Por otro, Garuda actúa de forma activa: el dispositivo integra un comedero que, según la especie identificada, dispensa pienso convencional si el ave es autóctona o pienso esterilizante si es una cotorra. Así se reduce la capacidad reproductiva de la población invasora de manera progresiva, selectiva y no letal, sin afectar a las especies autóctonas.", "El proyecto nació en el InterHack 2026 y empieza con la cotorra en el área metropolitana de Barcelona, pero está pensado para escalar a otras especies invasoras y a otros territorios."], "alt": "Vista frontal del prototipo de Garuda"}, {"title": "Modelo 3D", "text": [], "sub": "Nuestro prototipo de solución", "alt": "Vista de tres cuartos del modelo de la caseta de madera"}, {"title": "Dos compartimentos", "text": [], "alt": "Modelo 3D explosionado con los dos comederos"}, {"title": "Monitorización con IA", "text": ["Garuda incorpora una cámara con inteligencia artificial que identifica automáticamente cada ave que se acerca, por ejemplo si es una cotorra o un gorrión, y le asigna un nivel de confianza. Cada detección genera datos continuos sobre la presencia, la distribución y la actividad de la especie invasora. Con esta información, administraciones y entidades pueden hacer un seguimiento poblacional preciso, detectar nuevas zonas de expansión y evaluar el efecto de las medidas aplicadas, sin depender de recuentos manuales puntuales."], "alt": "Diagrama: la cámara del comedero capta las aves y la IA las clasifica (cotorra 0,92 y gorrión 0,85); la cotorra suma +1 en el mapa y el gorrión queda protegido"}, {"title": "Privacidad desde el diseño", "text": ["Garuda no almacena imágenes. La cámara captura un fotograma, que se envía cifrado por 4G (no por wifi) a un servidor, donde se procesa. Solo se conserva el registro de detección, que es lo que muestra la web. Al no guardarse imágenes, se protege la privacidad de los ciudadanos."]}, {"title": "Futuro", "text": ["Garuda empieza con la cotorra en el área metropolitana de Barcelona, pero está pensado para escalar a otras especies invasoras y a otros territorios. También puede integrarse con otras soluciones de control y convertirse en una herramienta de investigación científica y de educación ambiental, gracias a los datos continuos que genera."]}],
   },
 };

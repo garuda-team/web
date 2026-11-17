@@ -30,6 +30,11 @@ pnpm-debug.log*
 .npmrc
 *.pfx
 *.p8
+# SSH keys without extension
+id_rsa*
+id_ed25519*
+id_ecdsa*
+id_dsa*
 
 # Test coverage
 coverage/
@@ -58,3 +63,9 @@ dist-ssr/
 *.swp
 *.swo
 .ai
+
+# material de trabajo; sus contenidos se migran a src/ o public/ por fases
+claude_tareas/
+
+# Source assets (original SolidWorks GLB, source PNGs); never published
+assets-src/

@@ -139,7 +139,7 @@ export function handleAnchors() {
   const onClick = (e) => {
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     const a = e.target.closest?.('a[href^="#"]');
-    if (!a) return;
+    if (!a || (a.target && a.target !== "_self")) return; // new-tab links keep native behaviour
     const href = a.getAttribute("href");
     const here = parseHash(window.location.hash); // page we are on, if any
     let id;
@@ -154,6 +154,7 @@ export function handleAnchors() {
     if (!document.getElementById(id)) return;
     e.preventDefault();
     scrollToId(id);
+    if (id === "main") return; // skip link: move focus/scroll only, keep the URL
     // Keep page + section in the URL so a reload opens the same place.
     if (here) window.history.replaceState(window.history.state, "", routeHash(here.path, id === "top" ? "" : id));
     else window.history.replaceState(window.history.state, "", `#${id}`);

@@ -3,7 +3,7 @@ import { useReducedMotion } from "../lib/hooks.js";
 import { inV2Folder } from "../lib/photos.js";
 
 /*
-  Home-only decorative flora, drawn from the real frame sequences in src/photos/flora/<folder>/.
+  Decorative flora (home, software, team, stats, sdg; never hardware), drawn from the real frame sequences in src/photos/flora/<folder>/.
   - Crowns (copas, no trunks) on both edges, at most 40% of each tree on screen.
   - Sparrows (gorrion) crossing the background, on their own: no scroll, no pointer.
   - One canvas, one rAF loop, no React state per frame. Frames load lazily on mount, cached per folder so remounts do not reload; with birdsOnly only the bird folder is loaded.
@@ -12,13 +12,19 @@ import { inV2Folder } from "../lib/photos.js";
 
 /* Lazy, cached per folder: nothing is requested until a Flora mounts. */
 const cache = {};
-const load = (folder) =>
-  (cache[folder] ||= inV2Folder(`flora/${folder}`).map((it) => {
+/* `want(i, n)` filters which frames are requested; frames missing from a previous call are filled in later. */
+const load = (folder, want = () => true) => {
+  const items = inV2Folder(`flora/${folder}`);
+  const c = (cache[folder] ||= { items, imgs: new Array(items.length).fill(null) });
+  c.items.forEach((it, i) => {
+    if (c.imgs[i] || !want(i, c.items.length)) return;
     const img = new Image();
     img.decoding = "async";
     img.src = it.url;
-    return img;
-  }));
+    c.imgs[i] = img;
+  });
+  return c.imgs;
+};
 
 /* Sparrow flap cycle (1-based frames of gorrion/): wings up 5-10, downstroke 11-16, back up 17-25, then loops to 5. Downstroke start held for a smoother turn. */
 const BIRD_SEQ = [5, 6, 7, 8, 9, 10, 11, 11, 12, 13, 14, 15, 16, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25].map((n) => n - 1);
@@ -55,7 +61,11 @@ export default function Flora({ birdsOnly = false }) {
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    const SEQ = { crown: birdsOnly ? [] : load("copas"), bird: load("gorrion") };
+    /* reduced motion: only the frames drawStatic paints; animated: only the frames BIRD_SEQ plays */
+    const SEQ = {
+      crown: birdsOnly ? [] : load("copas", reduced ? (i, n) => TREES.some((tr) => tr.ph % n === i) : undefined),
+      bird: load("gorrion", reduced ? (i) => i === BIRD_SEQ[0] : (i) => BIRD_SEQ.includes(i)),
+    };
     const rnd = Math.random;
     let vw = 0;
     let vh = 0;

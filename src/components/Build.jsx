@@ -1,12 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { SplitWords } from "./Reveal.jsx";
-import { ui } from "../content.js";
+import { useEffect, useRef, useState } from "react";
+import { GhostWord, SplitWords } from "./Reveal.jsx";
+import { ghosts, phasesPreview, ui } from "../content.js";
 import { routeHash } from "../lib/route.js";
 import { Rich, fill } from "../lib/text.jsx";
-import { pad2, useReducedMotion } from "../lib/hooks.js";
-import { startingWith } from "../lib/photos.js";
-import { Glyph } from "./Glyphs.jsx";
-import Media from "./Media.jsx";
+import { pad2 } from "../lib/hooks.js";
+import { named, startingWith } from "../lib/photos.js";
 
 function Chevron({ dir = "right" }) {
   return (
@@ -16,227 +14,28 @@ function Chevron({ dir = "right" }) {
   );
 }
 
-const DESKTOP = "(min-width: 900px)";
-
-function useDesktop() {
-  const [yes, setYes] = useState(() => (typeof window !== "undefined" && window.matchMedia ? window.matchMedia(DESKTOP).matches : true));
-  useEffect(() => {
-    const mq = window.matchMedia(DESKTOP);
-    const on = () => setYes(mq.matches);
-    mq.addEventListener?.("change", on);
-    return () => mq.removeEventListener?.("change", on);
-  }, []);
-  return yes;
+/* Where a step's picture comes from: a named file in photos/steps (optional), a model snapshot (home_model, by number) or a remote image. */
+function pictureOf(step) {
+  const own = step.photo ? named("steps", step.photo)[0] : null;
+  if (own) return { url: own.url, contain: true, diagram: true };
+  const model = step.model ? startingWith("home_model", step.model)[0] : null;
+  if (model) return { url: model.url, contain: false };
+  if (step.image) return { url: step.image.src, contain: false, remote: true };
+  return null;
 }
 
-export default function Build({ id = "build", data, preview = false }) {
-  const reduced = useReducedMotion();
-  const desktop = useDesktop();
-  const pinned = !reduced && desktop;
+/* The privacy flow as an ordered list: the list is the accessible version of the diagram. */
+function PrivacyFlow() {
+  const p = phasesPreview.privacy;
+  const last = p.flow.length - 1;
   return (
-    <section id={id} className="section build surface-paper" data-surface="paper" data-wave>
-      <div className="build__frame" data-surface="paper">
-        {pinned ? <Pinned data={data} preview={preview} /> : <Static data={data} preview={preview} />}
-      </div>
-    </section>
-  );
-}
-
-function Cta() {
-  return (
-    <a className="btn btn--solid build__cta" href={routeHash("/hardware")}>
-      {ui.build.explore}
-    </a>
-  );
-}
-
-function Head({ data, preview, cta = true }) {
-  return (
-    <div className="section-head">
-      <SplitWords as="h2" className="h2" text={data.title} />
-      <p className="lead"><Rich text={data.lead} /></p>
-      {preview && cta ? <Cta /> : null}
-    </div>
-  );
-}
-
-/* Reduced motion and small screens: every step in a plain list, drone at rest. */
-function Static({ data, preview }) {
-  return (
-    <div className="wrap">
-      <Head data={data} preview={preview} cta={false} />
-      <ol className="steps">
-        {data.steps.map((step, i) => (
-          <Step key={step.title} n={i + 1} step={step} preview={preview} />
-        ))}
-      </ol>
-      {preview ? (
-        <div className="build__cta-bar">
-          <Cta />
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
-/* Tall track + sticky stage: scroll progress through the track picks the step. */
-function Pinned({ data, preview }) {
-  const TOTAL = data.steps.length;
-  const track = useRef(null);
-  const [active, setActive] = useState(0);
-  const [steps, setSteps] = useState(false);
-
-  useEffect(() => {
-    const el = track.current;
-    let raf = 0;
-    let last = -1;
-    const run = () => {
-      raf = 0;
-      const r = el.getBoundingClientRect();
-      const span = r.height - window.innerHeight;
-      const p = span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 0;
-      setSteps(p > 0.02);
-      const idx = Math.min(TOTAL - 1, Math.floor(p * TOTAL));
-      if (idx !== last) {
-        last = idx;
-        setActive(idx);
-      }
-    };
-    const queue = () => {
-      if (!raf) raf = requestAnimationFrame(run);
-    };
-    run();
-    window.addEventListener("scroll", queue, { passive: true });
-    window.addEventListener("resize", queue);
-    return () => {
-      window.removeEventListener("scroll", queue);
-      window.removeEventListener("resize", queue);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
-
-  const goTo = useCallback(
-    (i) => {
-      const el = track.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const span = rect.height - window.innerHeight;
-      if (span <= 0) return;
-      const clamped = Math.max(0, Math.min(TOTAL - 1, i));
-      const p = (clamped + 0.5) / TOTAL;
-      const top = window.scrollY + rect.top + p * span;
-      window.scrollTo({ top, behavior: "smooth" });
-    },
-    [TOTAL],
-  );
-
-  return (
-    <div ref={track} className="build__track" style={{ "--build-steps": TOTAL }}>
-      <div className="build__stage" data-phase={steps ? "steps" : "intro"}>
-        <div className="wrap build__wrap">
-          <div className="build__head">
-            <div className="build__head-in">
-              <Head data={data} preview={preview} cta={false} />
-            </div>
-          </div>
-
-          <div className="build__carousel" data-has-image={data.steps[active].image ? "yes" : "no"}>
-            <button
-              type="button"
-              className="build__nav build__nav--prev"
-              onClick={() => goTo(active - 1)}
-              disabled={active === 0}
-              aria-label={fill(ui.build.goTo, { n: Math.max(1, active), total: TOTAL })}
-            >
-              <Chevron dir="left" />
-            </button>
-
-            <div className="build__slides" role="presentation">
-              {data.steps.map((s, i) => {
-                const offset = i - active;
-                const abs = Math.abs(offset);
-                const state = offset === 0 ? "active" : abs === 1 ? "near" : "far";
-                return (
-                  <article
-                    key={s.title}
-                    className="build__slide"
-                    data-state={state}
-                    data-side={offset === 0 ? "" : offset < 0 ? "left" : "right"}
-                    style={{ "--offset": offset }}
-                    aria-hidden={offset !== 0}
-                    aria-roledescription="slide"
-                  >
-                    <div className="build__slide-media">
-                      {s.image ? (
-                        <img src={s.image.src} alt="" loading={abs > 1 ? "lazy" : "eager"} decoding="async" />
-                      ) : (
-                        <div className="build__slide-glyph">
-                          <Glyph name={s.glyph} size={120} />
-                        </div>
-                      )}
-                      <div className="build__slide-shade" aria-hidden="true" />
-                      <span className="build__slide-num">{pad2(i + 1)}</span>
-                    </div>
-                    <div className="build__slide-copy">
-                      <h3 className="build__slide-title">{s.title}</h3>
-                      {s.date ? (
-                        <p className="step__date">
-                          <Rich text={s.date} />
-                        </p>
-                      ) : null}
-                      <p className="build__slide-text"><Rich text={s.text} /></p>
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
-
-            <button
-              type="button"
-              className="build__nav build__nav--next"
-              onClick={() => goTo(active + 1)}
-              disabled={active === TOTAL - 1}
-              aria-label={fill(ui.build.goTo, { n: Math.min(TOTAL, active + 2), total: TOTAL })}
-            >
-              <Chevron dir="right" />
-            </button>
-          </div>
-
-          <div className="build__dock">
-            <span className="build__counter" aria-hidden="true">
-              <strong>{pad2(active + 1)}</strong>
-              <span>/</span>
-              <span>{pad2(TOTAL)}</span>
-            </span>
-            <ol className="build__dots" aria-label={ui.build.progress}>
-              {data.steps.map((s, i) => (
-                <li key={s.title}>
-                  <button
-                    type="button"
-                    className="build__dot"
-                    data-state={i === active ? "now" : i < active ? "done" : "next"}
-                    onClick={() => goTo(i)}
-                  >
-                    <span className="sr-only">{fill(ui.build.goTo, { n: i + 1, total: TOTAL })}</span>
-                  </button>
-                </li>
-              ))}
-            </ol>
-          </div>
-
-          {preview ? (
-            <div className="build__cta-bar">
-              <Cta />
-            </div>
-          ) : null}
-        </div>
-      </div>
-      {/* Screen readers get the full list; the sticky card above is decorative. */}
-      <ol className="sr-only" aria-label={data.title}>
-        {data.steps.map((s, i) => (
-          <li key={s.title} aria-current={i === active ? "step" : undefined}>
-            <strong>{fill(ui.build.step, { n: i + 1 })}{s.title}</strong>
-            <p><Rich text={s.text} /></p>
+    <div className="privacy" tabIndex={0} role="region" aria-label={p.title}>
+      <ol className="privacy__flow" aria-label={p.list}>
+        {p.flow.map((node, i) => (
+          <li key={node.label} className="privacy__node" data-kept={i >= last - 1 ? "yes" : "no"}>
+            <span className="privacy__label">{node.label}</span>
+            <span className="privacy__note">{node.note}</span>
+            {i === last - 1 ? <span className="privacy__tag">{p.kept}</span> : null}
           </li>
         ))}
       </ol>
@@ -244,44 +43,132 @@ function Pinned({ data, preview }) {
   );
 }
 
-function Step({ n, step, preview }) {
-  const diskPhotos = preview ? [] : startingWith("steps", n);
-  const photos = diskPhotos.length
-    ? diskPhotos
-    : step.image
-      ? [{ url: step.image.src, type: "image", caption: "", folder: "steps", file: step.image.src, base: step.image.src, dir: "steps" }]
-      : [];
-  const num = pad2(n);
+function Front({ step, n, picture, children }) {
   return (
-    <li className="step">
-      <div className="step__head">
-        <span className="step__num" aria-hidden="true">
-          {num}
-        </span>
-        <div className="step__titles">
-          <h3 className="step__title">
-            <span className="sr-only">{fill(ui.build.step, { n })}</span>
-            {step.title}
-          </h3>
-          {step.date ? (
-            <p className="step__date">
-              <Rich text={step.date} />
-            </p>
+    <>
+      <div className="fcard__stage">
+      {step.visual === "privacy" ? (
+        <PrivacyFlow />
+      ) : step.visual === "future" ? (
+        <div className="fcard__badge" aria-hidden="true">{step.badge}</div>
+      ) : picture ? (
+        <div className="fcard__media" data-fit={picture.contain ? "contain" : "cover"} data-kind={picture.diagram ? "diagram" : undefined}>
+          <img src={picture.url} referrerPolicy={picture.remote ? "no-referrer" : undefined} alt={step.alt || step.image?.alt || ""} loading="lazy" decoding="async" />
+        </div>
+      ) : (
+        <div className="fcard__media fcard__media--empty" aria-hidden="true" />
+      )}
+      {children}
+      </div>
+      <div className="fcard__bar">
+        <span className="fcard__num" aria-hidden="true">{pad2(n)}</span>
+        <div className="fcard__titles">
+          <h3 className="fcard__title">{step.title}</h3>
+          {step.sub ? <p className="fcard__sub">{step.sub}</p> : null}
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* One card: picture in front, text behind. Only the visible face is exposed to tab order and screen readers. */
+function Card({ step, n, total }) {
+  const [flipped, setFlipped] = useState(false);
+  const hasBack = step.text.length > 0;
+  const picture = pictureOf(step);
+  const flipLabel = fill(ui.build.flipLabel, { title: step.title });
+  const frontBtn = useRef(null);
+  const backBtn = useRef(null);
+  const moved = useRef(false);
+  /* The pressed button sits in the face that becomes hidden: hand focus to the twin control on the visible face. */
+  useEffect(() => {
+    if (!moved.current) return;
+    (flipped ? backBtn : frontBtn).current?.focus();
+  }, [flipped]);
+  const flip = (to) => {
+    moved.current = true;
+    setFlipped(to);
+  };
+  return (
+    <article className="fcard" data-flipped={flipped ? "yes" : "no"} aria-roledescription="card" aria-label={fill(ui.build.cardOf, { n, total })}>
+      <div className="fcard__inner">
+        <div className="fcard__face fcard__face--front" aria-hidden={flipped} inert={flipped}>
+          <Front step={step} n={n} picture={picture}>
+            {hasBack ? (
+              <button ref={frontBtn} type="button" className="btn fcard__flip" aria-label={flipLabel} aria-expanded={flipped} onClick={() => flip(true)}>
+                {ui.build.flip}
+              </button>
+            ) : null}
+          </Front>
+        </div>
+        {hasBack ? (
+          <div className="fcard__face fcard__face--back" aria-hidden={!flipped} inert={!flipped}>
+            <div className="fcard__copy" tabIndex={flipped ? 0 : -1} role="group" aria-label={step.title}>
+              <p className="fcard__kicker"><span aria-hidden="true">{pad2(n)}</span> {step.title}</p>
+              {step.text.map((t, i) => (
+                <p key={i} className="fcard__text"><Rich text={t} /></p>
+              ))}
+            </div>
+            <button ref={backBtn} type="button" className="btn fcard__flip" onClick={() => flip(false)}>
+              {ui.build.flipBack}
+            </button>
+          </div>
+        ) : null}
+      </div>
+    </article>
+  );
+}
+
+export default function Build({ id = "build", data, preview = false }) {
+  const total = data.steps.length;
+  const [active, setActive] = useState(0);
+  const go = (i) => setActive(Math.max(0, Math.min(total - 1, i)));
+  const step = data.steps[active];
+  return (
+    <section id={id} className="section build surface-paper" data-surface="paper" data-wave aria-labelledby={`${id}-title`}>
+      <GhostWord text={ghosts.steps} />
+      <div className="build__frame" data-surface="paper">
+        <div className="wrap">
+          <div className="section-head">
+            <SplitWords as="h2" className="h2" id={`${id}-title`} text={data.title} />
+            {data.lead ? <p className="lead"><Rich text={data.lead} /></p> : null}
+          </div>
+
+          <div className="build__cards" role="region" aria-roledescription="carousel" aria-label={data.title}>
+            {/* Only the current card is rendered; key resets it to its front on every change. */}
+            <Card key={active} step={step} n={active + 1} total={total} />
+            <div className="build__dock">
+              <button type="button" className="build__nav" onClick={() => go(active - 1)} disabled={active === 0} aria-label={ui.build.prev}>
+                <Chevron dir="left" />
+              </button>
+              <span className="build__counter" aria-hidden="true">
+                <strong>{pad2(active + 1)}</strong>
+                <span>/</span>
+                <span>{pad2(total)}</span>
+              </span>
+              <ol className="build__dots" aria-label={ui.build.progress}>
+                {data.steps.map((s, i) => (
+                  <li key={s.title}>
+                    <button type="button" className="build__dot" data-state={i === active ? "now" : i < active ? "done" : "next"} aria-current={i === active ? "step" : undefined} onClick={() => go(i)}>
+                      <span className="sr-only">{fill(ui.build.goTo, { n: i + 1, total })}: {s.title}</span>
+                    </button>
+                  </li>
+                ))}
+              </ol>
+              <button type="button" className="build__nav" onClick={() => go(active + 1)} disabled={active === total - 1} aria-label={ui.build.next}>
+                <Chevron dir="right" />
+              </button>
+            </div>
+            <p className="sr-only" aria-live="polite">{fill(ui.build.goTo, { n: active + 1, total })}: {step.title}</p>
+          </div>
+
+          {preview ? (
+            <div className="build__cta-bar">
+              <a className="btn btn--solid build__cta" href={routeHash("/hardware")}>{ui.build.explore}</a>
+            </div>
           ) : null}
         </div>
       </div>
-      <div className="step__body">
-        <Media
-          items={photos}
-          glyph={step.glyph}
-          label={step.title}
-          // Developer note (not shown): add photos for this step as
-          // src/photos/steps/NN-description.jpg, where NN is the step number.
-        />
-        <div className="step__copy">
-          <p><Rich text={step.text} /></p>
-        </div>
-      </div>
-    </li>
+    </section>
   );
 }
