@@ -123,12 +123,7 @@ function Panel({ member, id, photo, onClose }) {
   const box = useRef(null);
   const closeBtn = useRef(null);
   const name = plain(member.name);
-  const { linkedin, github } = member.links || {};
-  const links = [
-    { href: safeUrl(linkedin), label: t.linkedin },
-    { href: safeUrl(github), label: t.github },
-  ].filter((l) => l.href);
-  const education = [member.background].filter(Boolean);
+  const linkedin = safeUrl(member.links?.linkedin);
 
   useEffect(() => {
     closeBtn.current?.focus({ preventScroll: true });
@@ -164,36 +159,19 @@ function Panel({ member, id, photo, onClose }) {
           </dd>
           <dt>{t.education}</dt>
           <dd>
-            {education.map((e, i) => (
-              <span key={i} className="team-panel__line">
-                <Rich text={e} />
-              </span>
-            ))}
+            <Rich text={member.education} />
           </dd>
-          <dt>{t.links}</dt>
-          <dd>
-            {links.length ? (
-              links.map((l) => (
-                <a key={l.label} className="team-panel__link" href={l.href} target="_blank" rel="noopener noreferrer">
-                  {l.label}
+          {linkedin ? (
+            <>
+              <dt>{t.linkedin}</dt>
+              <dd>
+                <a className="team-panel__link" href={linkedin} target="_blank" rel="noopener noreferrer">
+                  {t.linkedin}
                   <span className="sr-only">{t.newTab}</span>
                 </a>
-              ))
-            ) : (
-              <Rich text={t.linksGap} />
-            )}
-          </dd>
-        </dl>
-        <h4 className="team-panel__sub">{t.reflections}</h4>
-        <dl className="team-panel__facts team-panel__facts--stack">
-          {team.reflections.map((r) => (
-            <div key={r.title}>
-              <dt>{r.title}</dt>
-              <dd>
-                <Rich text={t.reflectionGap} />
               </dd>
-            </div>
-          ))}
+            </>
+          ) : null}
         </dl>
       </div>
       <div className="team-panel__media">

@@ -86,7 +86,7 @@ function Viewer({ items, index, onIndex, onClose }) {
         {item.type === "video" ? (
           <video src={item.url} controls autoPlay playsInline className="lightbox__media" />
         ) : (
-          <img src={item.url} alt={item.alt || item.caption || ""} className="lightbox__media" />
+          <img src={item.url} referrerPolicy="no-referrer" alt={item.alt || item.caption || ""} className="lightbox__media" />
         )}
         <figcaption className="lightbox__caption">
           <span>{item.caption}</span>

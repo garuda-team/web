@@ -20,7 +20,6 @@ const siteEn = {
     name: "[Programme name]",
     school: "[School]",
     university: "[University]",
-    url: "",
     address: ["[Address line 1]", "[Address line 2]", "[Postcode and city]"],
   },
   // While true, empty photo slots show where to put your photos.
@@ -34,58 +33,39 @@ const heroEn = {
     "Garuda is a smart bird feeder that uses IoT and Edge AI to manage urban birdlife. It helps native species, such as the house sparrow, keep their food and nests against invasive ones, such as the monk parakeet, with ethical and sustainable methods.",
 };
 
-// Portraits: 1.jpg to 5.jpg in src/photos/home/home_team/ (in this order).
+// Portraits: 01.webp to 05.webp in src/photos/home/home_team/ (in this order).
 const teamEn = {
   title: "Who we are",
   members: [
     {
-      name: "[Name Surname]",
-      role: "[Role in the project]",
-      background: "[Background]",
-      from: "[City, country]",
-      links: { linkedin: "", email: "", github: "" },
+      name: "Ivan Garcia Berral",
+      role: "Project Leader",
+      education: "Industrial Engineer",
+      links: { linkedin: "https://www.linkedin.com/in/ivan-garc%C3%ADa-berral/" },
     },
     {
-      name: "[Name Surname]",
-      role: "[Role in the project]",
-      background: "[Background]",
-      from: "[City, country]",
-      links: { linkedin: "", email: "", github: "" },
+      name: "Federico Pompeo Teva",
+      role: "Hardware and Software Leader",
+      education: "Aerospace & UAV System Engineer",
+      links: { linkedin: "https://www.linkedin.com/in/federicopompeoteva" },
     },
     {
-      name: "[Name Surname]",
-      role: "[Role in the project]",
-      background: "[Background]",
-      from: "[City, country]",
-      links: { linkedin: "", email: "", github: "" },
+      name: "Alex Veciana Garcia",
+      role: "Hardware",
+      education: "Electronics Engineer",
+      links: { linkedin: "https://www.linkedin.com/in/alexandre-veciana/" },
     },
     {
-      name: "[Name Surname]",
-      role: "[Role in the project]",
-      background: "[Background]",
-      from: "[City, country]",
-      links: { linkedin: "", email: "", github: "" },
+      name: "Marc Montaner Roldan",
+      role: "Hardware",
+      education: "Electronics Engineer",
+      links: { linkedin: "https://www.linkedin.com/in/marc-montaner-roldan/" },
     },
     {
-      name: "[Name Surname]",
-      role: "[Role in the project]",
-      background: "[Background]",
-      from: "[City, country]",
-      links: { linkedin: "", email: "", github: "" },
-    },
-  ],
-  reflections: [
-    {
-      title: "What we learned",
-      text: "[Write three or four sentences. What surprised you while building the prototype?]",
-    },
-    {
-      title: "How we worked as a team",
-      text: "[How did you split the work? What worked well, and what would you organise differently?]",
-    },
-    {
-      title: "What we would do differently",
-      text: "[If you started again tomorrow, what would you change?]",
+      name: "Pablo Ruiz Perez",
+      role: "Software",
+      education: "Computer Engineer",
+      links: { linkedin: "https://www.linkedin.com/in/pablo-ruiz-perez/" },
     },
   ],
 };
@@ -98,8 +78,10 @@ const brandEn = {
 // Giant semi-transparent words behind each section (decorative, hidden from screen readers).
 const ghostsEn = {
   top: "Garuda",
-  project: "Roadmap",
   build: "Build",
+  steps: "Step by step",
+  roadmap: "Roadmap",
+  stats: "Stats",
   team: "Team",
   contact: "Contact",
   stubs: {
@@ -123,6 +105,9 @@ const uiEn = {
   skip: "Skip to content",
   docTitle: "Garuda",
   docTitlePage: "{page} · Garuda",
+  pageLoading: "Loading page…",
+  pageError: "Couldn't load this page.",
+  pageRetry: "Retry",
   and: " and ",
   nav: {
     sections: "Sections",
@@ -134,14 +119,17 @@ const uiEn = {
       { path: "/", label: "Home" },
       { path: "/hardware", label: "Hardware" },
       { path: "/software", label: "Software" },
+      { path: "/stats", label: "Stats" },
       { path: "/team", label: "Team & Sponsors" },
+      { path: "/sdg", label: "SDG" },
     ],
     // Secondary menu: the sections of the page you are on.
     links: {
-      "/": { project: "Roadmap", phases: "Stages", team: "Who we are", contact: "Contact" },
+      "/": { roadmap: "Roadmap", phases: "Step by step", contact: "Contact" },
       "/hardware": {},
       "/software": {},
       "/team": {},
+      "/sdg": { "sdg-7": "SDG 7", "sdg-9": "SDG 9", "sdg-11": "SDG 11", "sdg-12": "SDG 12", "sdg-15": "SDG 15" },
     },
   },
   softwareDiagram: {
@@ -164,7 +152,7 @@ const uiEn = {
       sections: [
         {
           title: "Devices",
-          text: "Each feeder processes image and sound on the device itself. Only aggregated data — the species detected, the moment, a count — leaves the feeder; raw image and audio never do. That is privacy by design.",
+          text: "Each feeder has a camera that captures a frame. The frame is sent encrypted over 4G to a server, where the AI processes it. Nothing is stored on the device or kept as an image: only the detection log is kept. That is privacy by design.",
         },
         {
           title: "Secure connection",
@@ -172,7 +160,7 @@ const uiEn = {
         },
         {
           title: "Processing and data",
-          text: "In the cloud we validate and enrich what arrives: each message is tied to its feeder and location. We keep both the full history, in case we need to revisit it, and a summarised version for day-to-day use.",
+          text: "On the server we process each frame with AI and produce a detection log, which is what the website shows. Each detection is tied to its feeder and location. We keep both the full history, in case we need to revisit it, and a summarised version for day-to-day use.",
         },
         {
           title: "Visualisation website",
@@ -184,28 +172,19 @@ const uiEn = {
         },
       ],
     },
-    team: { title: "Team & Sponsors", text: "[Team & Sponsors page: pending]" },
-  },
-  project: {
-    phase: "Stage {n}. ",
-    status: { done: "Done", current: "In progress" },
+    team: { title: "Team", sponsorsTitle: "Sponsors", sponsorsSoon: "Coming soon" },
   },
   team: {
     closeMark: "×",
     more: "More about {name}",
     photoHint: "[Photo {n}{ext} goes in src/photos/home/home_team/]",
-    hintExt: ".jpg",
+    hintExt: ".webp",
     linkedin: "LinkedIn",
-    github: "GitHub",
     portrait: "Portrait of {name}",
     logoAlt: "Garuda team logo",
     close: "Close",
     role: "Role in the team",
-    education: "Education",
-    links: "Links",
-    linksGap: "[LinkedIn and GitHub links]",
-    reflections: "Reflections",
-    reflectionGap: "[Answer from this team member]",
+    education: "Degree",
     newTab: " (opens in a new tab)",
   },
   lightbox: {
@@ -226,6 +205,82 @@ const uiEn = {
     progress: "Progress",
     explore: "Explore the prototype",
     goTo: "Step {n} of {total}",
+    flip: "Flip",
+    flipBack: "Show front",
+    flipLabel: "Flip card: {title}",
+    cardOf: "Step {n} of {total}",
+    prev: "Previous step",
+    next: "Next step",
+  },
+  highlights: {
+    stats: { cta: "See Stats", title: "Stats", loading: "Loading figures…", error: "The figures could not be loaded. You can still see them on the Stats page." },
+  },
+  statsPage: {
+    kpis: "Key figures",
+    chart: "Chart",
+    chartLoading: "Loading chart…",
+    chartAria: "Chart: {title}",
+    dataTable: "Data table for this chart",
+    unit: "Unit",
+    projection: "Projection",
+    noData: "No data",
+    range: "Range",
+    rangeNote: "Dashed bar: range between low and high, no central value.",
+    boundNote: "means \"more than\": the figure is a lower bound.",
+    fields: { mark: "Note", low: "Low", high: "High", year: "Year", label: "Category", group: "Group", value: "Value", mean: "Mean", total: "Total", annualAverage: "Annual average", amount: "Amount", springSince2002: "Spring, since 2002", winterSince2002: "Winter, since 2002" },
+    legend: "Show or hide series",
+    seriesPicker: "Choose data series",
+    viewTable: "View as table",
+    sources: "Sources",
+    sourcesOf: "Sources for this table",
+    also: "See also",
+    glossary: "Glossary",
+    warning: "Warning",
+    info: "Note",
+    notes: "Notes",
+    external: "(opens in a new tab)",
+    units: { individuals: "individuals", index: "index (2005 = 1)", percent: "%", percentPerYear: "% per year", count: "count", MEUR: "million euros", EUR: "euros" },
+  },
+  sdg: {
+    title: "Sustainable Development Goals",
+    lead: "The five UN Sustainable Development Goals (SDGs) that Garuda contributes to.",
+    goal: "SDG {n}",
+    whyHead: "Why we contribute",
+    emblemAlt: "United Nations Sustainable Development Goals emblem",
+    logoAlt: "Logo of SDG {n}",
+    footerTitle: "Sustainable Development Goals",
+    items: [
+      {
+        n: 7,
+        title: "Affordable and Clean Energy",
+        why: "The feeder is powered by a solar panel, a renewable energy source, so it can work for long periods in remote settings without depending on the power grid.",
+      },
+      {
+        n: 9,
+        title: "Industry, Innovation and Infrastructure",
+        why: "Garuda is our own hardware and software solution, combining AI at the edge, remote 4G connectivity and a modular design. It is innovative technological infrastructure for managing the natural environment.",
+      },
+      {
+        n: 11,
+        title: "Sustainable Cities and Communities",
+        why: "Garuda helps manage invasive species in urban and peri-urban areas. In doing so it protects local biodiversity as well as the health and safety of the communities who live there.",
+      },
+      {
+        n: 12,
+        title: "Responsible Consumption and Production",
+        why: "The feeder is built with sustainable materials and designed so that parts can be repaired and reused. Its multi-species feeding design works without single-use consumables.",
+      },
+      {
+        n: 15,
+        title: "Life on Land",
+        why: "Garuda detects invasive species and makes it possible to act on them selectively. This protects native wildlife and the ecosystems it depends on.",
+      },
+    ],
+  },
+  cookies: {
+    title: "Cookies and storage",
+    text: "This website uses no tracking or analytics cookies. It only saves in your browser your language preference and that you closed this notice (technical storage).",
+    close: "Close notice",
   },
   footer: {
     tagline: "Smart feeders for balanced urban birdlife.",
@@ -235,7 +290,9 @@ const uiEn = {
     top: "Back to top",
     links: {
       roadmap: "Roadmap",
-      stages: "Stages",
+      phases: "Step by step",
+      hardware: "Hardware",
+      software: "Software",
       team: "Who we are",
       contact: "Contact us",
     },
@@ -258,82 +315,29 @@ const uiEn = {
   },
 };
 
-// Home: stages summary (no dates).
-const projectV2En = {
-  title: "From prototype to city network.",
-  lead:
-    "Garuda is a prototype that is still growing. Here we show what it does today and what we plan to add. [Project context: pending]",
-  phases: [
-    { title: "Prototype", status: "done", text: "A feeder with two compartments, a camera, a microphone and a speaker, built around an Arduino Uno Q." },
-    { title: "Models and field tests", status: "current", text: "[Pending]" },
-    { title: "Servers and web", status: "upcoming", text: "Separate servers (API and database, and a visualisation website), with data sent by API from each board." },
-    { title: "More species and city integration", status: "upcoming", text: "More species, a high-fidelity speaker and integration with other city products." },
-  ],
-};
-
-// Home preview of the project (one line per step) and of stage 2.
-// Image URLs are placeholders from picsum.photos (CC0). The `search` field
-// points to an Unsplash search for a thematic replacement — download the
-// final photo and swap `src` for a local file under src/photos/steps/.
-const previewLines = [
-  ["The problem", "Invasive monk parakeets compete with native house sparrows for food and nests."],
-  ["Two compartments", "Compartment A for native birds, B with treated food for the invasive species."],
-  ["Computer vision", "The camera identifies the bird and the actuators open the right compartment."],
-  ["Acoustic monitoring", "A microphone identifies songs and builds a sound map."],
-  ["Native songs", "A speaker plays native songs to favour sparrows and other threatened species."],
-  ["Privacy by design", "Image and audio stay on the device, and only birds are detected."],
-  ["Models", "Image and audio models made with Edge Impulse tell the two species apart."],
-  ["Future", "Servers, a visualisation website, motion-activated camera and more species."],
-];
-const previewGlyphs = ["box", "radio", "arm", "cube", "gps", "calibrate", "flight", "flight"];
-// Wikimedia Commons files served through Special:FilePath (the URL redirects
-// to the current image). Each `src` returned HTTP 200 on verification; `page`
-// links to the Commons file page for licence and attribution.
-const previewImages = [
-  {
-    src: "https://commons.wikimedia.org/wiki/Special:FilePath/House_sparrows_in_CP_%2860060%29.jpg?width=1600",
-    alt: "House sparrows perched on a tangle of branches",
-    page: "https://commons.wikimedia.org/wiki/File:House_sparrows_in_CP_(60060).jpg",
-  },
-  {
-    src: "https://commons.wikimedia.org/wiki/Special:FilePath/Bird_feeder_%284338512925%29.jpg?width=1600",
-    alt: "Wooden bird feeder with birds",
-    page: "https://commons.wikimedia.org/wiki/File:Bird_feeder_(4338512925).jpg",
-  },
-  {
-    src: "https://commons.wikimedia.org/wiki/Special:FilePath/Raspberry_Pi_4_Model_B_-_Top.jpg?width=1600",
-    alt: "Raspberry Pi 4 single-board computer, top view",
-    page: "https://commons.wikimedia.org/wiki/File:Raspberry_Pi_4_Model_B_-_Top.jpg",
-  },
-  {
-    src: "https://commons.wikimedia.org/wiki/Special:FilePath/AKG_C214_Condenser_microphone.jpg?width=1600",
-    alt: "AKG C214 condenser microphone",
-    page: "https://commons.wikimedia.org/wiki/File:AKG_C214_Condenser_microphone.jpg",
-  },
-  null,
-  null,
-  {
-    src: "https://commons.wikimedia.org/wiki/Special:FilePath/Colored_neural_network.svg?width=1600",
-    alt: "Diagram of a colored artificial neural network",
-    page: "https://commons.wikimedia.org/wiki/File:Colored_neural_network.svg",
-  },
-  null,
-];
+// Home step-by-step cards. Per step: title, text (paragraphs; [] = image only), optional sub (caption),
+// alt, and one visual: image (remote), model (n -> home_model photo), photo (name -> steps folder, optional) or visual.
 const phasesPreviewEn = {
   title: "Garuda, step by step",
   lead: "",
-  phase2: { title: "Stage 2", text: "Working on it..." },
-  steps: previewLines.map(([title, text], i) => ({
-    title,
-    glyph: previewGlyphs[i],
-    text,
-    image: previewImages[i],
-    details: [],
-  })),
+  privacy: {"title": "Where the data goes", "flow": [{"label": "Camera", "note": "Captures a frame"}, {"label": "Frame", "note": "Sent encrypted over 4G, not Wi-Fi"}, {"label": "Server", "note": "Processes the frame; the image is not stored"}, {"label": "Detection log", "note": "The only thing that is stored"}, {"label": "Website", "note": "Shows the detection log"}], "kept": "Stored", "list": "Privacy flow, step by step"},
+  steps: [{"title": "The problem", "text": ["The monk parakeet (Myiopsitta monachus) is an invasive species that has spread notably across the Barcelona metropolitan area. It competes with native species, and its nests damage trees, crops and infrastructure, so the urban and peri-urban ecosystem loses biodiversity. Today the population is monitored and controlled mostly by hand, with scattered data and little capacity to react for city councils and organisations. What is missing is a tool that shows precisely where the parakeets are, how many there are and how the population evolves, without depending on one-off counts."], "glyph": "box", "image": {"src": "https://commons.wikimedia.org/wiki/Special:FilePath/House_sparrows_in_CP_%2860060%29.jpg?width=1600", "page": "https://commons.wikimedia.org/wiki/File:House_sparrows_in_CP_(60060).jpg", "alt": "House sparrows"}}, {"title": "How we solve it", "text": ["Garuda is a smart device that combines monitoring and control of the invasive species in a single point. It incorporates a camera with artificial intelligence that automatically identifies every bird that approaches, for example whether it is a parakeet or a sparrow, and assigns it a confidence level.", "On the one hand, Garuda acts passively: every detection generates continuous data on the presence, distribution and activity of the invasive species. With this information, administrations and organisations can carry out precise population monitoring, detect new areas of expansion and assess the effect of the measures applied, without depending on one-off manual counts.", "On the other hand, Garuda acts actively: the device includes a feeder that, depending on the species identified, dispenses conventional feed if the bird is native or sterilising feed if it is a parakeet. This reduces the reproductive capacity of the invasive population progressively, selectively and non-lethally, without affecting native species.", "The project was born at InterHack 2026 and starts with the monk parakeet in the Barcelona metropolitan area, but it is designed to scale to other invasive species and other territories."], "alt": "Front view of the Garuda prototype", "glyph": "radio", "model": 1}, {"title": "3D model", "text": [], "sub": "Our solution prototype", "alt": "Three-quarter view of the wooden hut model", "glyph": "cube", "model": 2}, {"title": "Two compartments", "text": [], "alt": "Exploded 3D model showing the two feeders", "glyph": "radio", "model": 5}, {"title": "Monitoring through AI", "text": ["Garuda incorporates a camera with artificial intelligence that automatically identifies every bird that approaches, for example whether it is a parakeet or a sparrow, and assigns it a confidence level. Every detection generates continuous data on the presence, distribution and activity of the invasive species. With this information, administrations and organisations can carry out precise population monitoring, detect new areas of expansion and assess the effect of the measures applied, without depending on one-off manual counts."], "alt": "Diagram: the feeder camera captures the birds and the AI classifies them (monk parakeet 0.92, sparrow 0.85); the parakeet adds +1 on the map and the sparrow is left protected", "glyph": "arm", "photo": "monitoring_AI"}, {"title": "Privacy by design", "text": ["Garuda does not store images. The camera captures a frame, which is sent encrypted over 4G (not Wi-Fi) to a server, where it is processed. Only the detection log is kept, and it is what the website shows. Because no images are stored, citizens' privacy is protected."], "glyph": "calibrate", "visual": "privacy"}, {"title": "Future", "text": ["Garuda starts with the monk parakeet in the Barcelona metropolitan area, but it is designed to scale to other invasive species and other territories. It can also be integrated with other control solutions, and become a tool for scientific research and environmental education, thanks to the continuous data it generates."], "glyph": "flight", "visual": "future", "badge": "Q3 2027"}],
 };
 
+const roadmapEn = {
+  title: "From prototype to city network.",
+  currentLabel: "Current milestone",
+  quarters: [
+    { label: "Q4 2026", current: true, items: ["MVP development", "Defining the business metrics", "Taking part in Industrial Tech"] },
+    { label: "Q1 2027", items: ["Launch of the first pilot tests", "Search for investors and grants", "Preparing the series launch"] },
+    { label: "Q2 2027", items: ["Analysis of the data from the pilot tests", "Product optimisation and improvement"] },
+    { label: "Q3 2027", items: ["Official launch of the service", "Expanding the team", "Study of the impact on other invasive species"] },
+  ],
+};
+
+
 // Resolved texts for the active language (fixed at load; changing language reloads the page).
-const merge = (base, over) => {
+export const merge = (base, over) => {
   if (over === undefined || over === null) return base;
   if (Array.isArray(base) || Array.isArray(over)) return Array.isArray(base) && Array.isArray(over) && over.length === base.length ? over.map((v, i) => merge(base[i], v)) : base;
   if (base && typeof base === "object" && typeof over === "object") {
@@ -344,6 +348,6 @@ const merge = (base, over) => {
   if (typeof over === "string" && !over.trim() && typeof base === "string") return base;
   return typeof over === typeof base || base === undefined ? over : base;
 };
-const base = { site: siteEn, hero: heroEn, team: teamEn, brand: brandEn, ghosts: ghostsEn, ui: uiEn, projectV2: projectV2En, phasesPreview: phasesPreviewEn };
+const base = { site: siteEn, hero: heroEn, team: teamEn, brand: brandEn, ghosts: ghostsEn, ui: uiEn, phasesPreview: phasesPreviewEn, roadmap: roadmapEn };
 const all = merge(base, LANG === "es" ? es : LANG === "ca" ? ca : {});
-export const { site, hero, team, brand, ghosts, ui, projectV2, phasesPreview } = all;
+export const { site, hero, team, brand, ghosts, ui, phasesPreview, roadmap } = all;

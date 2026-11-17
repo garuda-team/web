@@ -1,3 +1,4 @@
+import { preloadPage } from "../lib/lazyPages.js";
 import { useEffect, useRef, useState } from "react";
 import { site, ui } from "../content.js";
 import { routeHash } from "../lib/route.js";
@@ -110,7 +111,7 @@ export default function Nav({ route }) {
 
   const close = () => setOpen(false);
   const pages = ui.nav.pageLinks.map((p) => (
-    <a key={p.path} href={`#${p.path}`} className="nav__link" aria-current={route === p.path ? "page" : undefined} onClick={close}>
+    <a key={p.path} href={`#${p.path}`} className="nav__link" aria-current={route === p.path ? "page" : undefined} onClick={close} onPointerEnter={() => preloadPage(p.path)} onFocus={() => preloadPage(p.path)}>
       {p.label}
     </a>
   ));

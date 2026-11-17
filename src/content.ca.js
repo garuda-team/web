@@ -7,17 +7,6 @@ const member = {
   from: "[Ciutat, país]",
 };
 
-const previewLines = [
-  ["El problema", "Les cotorres argentines, una espècie invasora, competeixen amb els pardals comuns autòctons pel menjar i els nius."],
-  ["Dos compartiments", "El compartiment A és per als ocells autòctons i el B, amb menjar tractat, per a l'espècie invasora."],
-  ["Visió per computador", "La càmera identifica l'ocell i els actuadors obren el compartiment adequat."],
-  ["Monitoratge acústic", "Un micròfon identifica els cants i construeix un mapa sonor."],
-  ["Cants autòctons", "Un altaveu reprodueix cants autòctons per afavorir els pardals i altres espècies amenaçades."],
-  ["Privadesa des del disseny", "La imatge i l'àudio es queden al dispositiu, i només es detecten ocells."],
-  ["Models", "Uns models d'imatge i d'àudio fets amb Edge Impulse distingeixen les dues espècies."],
-  ["Futur", "Servidors, un web de visualització, càmera activada per moviment i més espècies."],
-];
-
 export default {
   site: {
     openPhoto: "Obre la foto: {caption}",
@@ -36,28 +25,47 @@ export default {
   },
   team: {
     title: "Qui som",
-    members: [member, member, member, member, member],
-    reflections: [
-      {
-        title: "Què hem après",
-        text: "[Escriviu tres o quatre frases. Què us ha sorprès mentre construíeu el prototip?]",
-      },
-      {
-        title: "Com hem treballat en equip",
-        text: "[Com vau repartir la feina? Què va funcionar bé i què organitzaríeu de manera diferent?]",
-      },
-      {
-        title: "Què faríem de manera diferent",
-        text: "[Si comencéssiu de nou demà, què canviaríeu?]",
-      },
+    members: [
+    {
+      name: "Ivan Garcia Berral",
+      role: "Líder de projecte",
+      education: "Enginyer Industrial",
+      links: { linkedin: "https://www.linkedin.com/in/ivan-garc%C3%ADa-berral/" },
+    },
+    {
+      name: "Federico Pompeo Teva",
+      role: "Líder de Hardware i Software",
+      education: "Enginyer de Sistemes Aeroespacials i UAV",
+      links: { linkedin: "https://www.linkedin.com/in/federicopompeoteva" },
+    },
+    {
+      name: "Alex Veciana Garcia",
+      role: "Hardware",
+      education: "Enginyer Electrònic",
+      links: { linkedin: "https://www.linkedin.com/in/alexandre-veciana/" },
+    },
+    {
+      name: "Marc Montaner Roldan",
+      role: "Hardware",
+      education: "Enginyer Electrònic",
+      links: { linkedin: "https://www.linkedin.com/in/marc-montaner-roldan/" },
+    },
+    {
+      name: "Pablo Ruiz Perez",
+      role: "Software",
+      education: "Enginyer Informàtic",
+      links: { linkedin: "https://www.linkedin.com/in/pablo-ruiz-perez/" },
+    },
     ],
   },
   brand: {
     scroll: "Desplaça't per veure com funciona",
   },
   ghosts: {
-    project: "Full de ruta",
     build: "Construcció",
+    steps: "Pas a pas",
+    roadmap: "Full de ruta",
+    stats: "Stats",
     team: "Equip",
     contact: "Contacte",
     stubs: {
@@ -67,6 +75,9 @@ export default {
     },
   },
   ui: {
+    pageLoading: "Carregant la pàgina…",
+    pageError: "No s'ha pogut carregar aquesta pàgina.",
+    pageRetry: "Torna-ho a provar",
     placeholderHint: "Marcador de posició: substitueix-lo a content.js",
     intro: {
       photoAlt: "Menjadora intel·ligent Garuda: un armari de fusta estilitzat amb una antena",
@@ -83,10 +94,13 @@ export default {
         { label: "Inici" },
         { label: "Hardware" },
         { label: "Software" },
+        { label: "Stats" },
         { label: "Equip i patrocinadors" },
+        { label: "ODS" },
       ],
       links: {
-        "/": { project: "Full de ruta", phases: "Etapes", team: "Qui som", contact: "Contacte" },
+        "/": { roadmap: "Full de ruta", phases: "Pas a pas", contact: "Contacte" },
+        "/sdg": { "sdg-7": "ODS 7", "sdg-9": "ODS 9", "sdg-11": "ODS 11", "sdg-12": "ODS 12", "sdg-15": "ODS 15" },
       },
     },
     softwareDiagram: {
@@ -108,7 +122,7 @@ export default {
         sections: [
           {
             title: "Dispositius",
-            text: "Cada menjadora processa la imatge i el so al mateix aparell. Només en surten dades agregades —l'espècie detectada, el moment, un recompte— i mai la imatge o l'àudio en brut. Així protegim la privacitat des del disseny.",
+            text: "Cada menjadora té una càmera que captura un fotograma. El fotograma s'envia xifrat per 4G a un servidor, on el processa la IA. No es desa res al dispositiu ni es conserva la imatge: només el registre de detecció. Així protegim la privacitat des del disseny.",
           },
           {
             title: "Connexió segura",
@@ -116,7 +130,7 @@ export default {
           },
           {
             title: "Processament i dades",
-            text: "Al núvol validem i enriquim el que arriba: associem cada missatge a la seva casita i a la seva ubicació, i en guardem tant l'històric complet, per si cal repassar-lo, com la versió ja resumida per al dia a dia.",
+            text: "Al servidor processem cada fotograma amb IA i generem un registre de detecció, que és el que mostra el web. Associem cada detecció a la seva casita i a la seva ubicació, i en guardem tant l'històric complet, per si cal repassar-lo, com la versió ja resumida per al dia a dia.",
           },
           {
             title: "Web de visualització",
@@ -128,11 +142,7 @@ export default {
           },
         ],
       },
-      team: { title: "Equip i patrocinadors", text: "[Pàgina d'equip i patrocinadors: pendent]" },
-    },
-    project: {
-      phase: "Etapa {n}. ",
-      status: { done: "Fet", current: "En curs" },
+      team: { title: "Equip", sponsorsTitle: "Patrocinadors", sponsorsSoon: "Properament" },
     },
     team: {
       more: "Més sobre {name}",
@@ -141,11 +151,7 @@ export default {
       logoAlt: "Logotip de l'equip Garuda",
       close: "Tanca",
       role: "Rol a l'equip",
-      education: "Formació",
-      links: "Enllaços",
-      linksGap: "[Enllaços de LinkedIn i GitHub]",
-      reflections: "Reflexions",
-      reflectionGap: "[Resposta d'aquest membre de l'equip]",
+      education: "Titulació",
       newTab: " (s'obre en una pestanya nova)",
     },
     lightbox: {
@@ -163,6 +169,82 @@ export default {
       progress: "Progrés",
       explore: "Explora el prototip",
       goTo: "Pas {n} de {total}",
+      flip: "Girar",
+      flipBack: "Veure anvers",
+      flipLabel: "Gira la targeta: {title}",
+      cardOf: "Pas {n} de {total}",
+      prev: "Pas anterior",
+      next: "Pas següent",
+    },
+    highlights: {
+      stats: { cta: "Veure Stats", title: "Stats", loading: "Carregant les xifres…", error: "No s'han pogut carregar les xifres. Les pots veure a la pàgina de Stats." },
+    },
+    statsPage: {
+      kpis: "Xifres clau",
+      chart: "Gràfic",
+      chartLoading: "Carregant el gràfic…",
+      chartAria: "Gràfic: {title}",
+      dataTable: "Taula de dades d'aquest gràfic",
+      unit: "Unitat",
+      projection: "Projecció",
+      noData: "Sense dades",
+      range: "Rang",
+      rangeNote: "Barra discontínua: rang entre mínim i màxim, sense valor central.",
+      boundNote: "vol dir \"més de\": la xifra és un mínim.",
+      fields: { mark: "Nota", low: "Mínim", high: "Màxim", year: "Any", label: "Categoria", group: "Grup", value: "Valor", mean: "Mitjana", total: "Total", annualAverage: "Mitjana anual", amount: "Import", springSince2002: "Primavera, des del 2002", winterSince2002: "Hivern, des del 2002" },
+      legend: "Mostrar o amagar sèries",
+      seriesPicker: "Triar sèrie de dades",
+      viewTable: "Veure com a taula",
+      sources: "Fonts",
+      sourcesOf: "Fonts d'aquesta taula",
+      also: "Vegeu també",
+      glossary: "Glossari",
+      warning: "Avís",
+      info: "Nota",
+      notes: "Notes",
+      external: "(s'obre en una pestanya nova)",
+      units: { individuals: "individus", index: "índex (2005 = 1)", percent: "%", percentPerYear: "% per any", count: "recompte", MEUR: "milions d'euros", EUR: "euros" },
+    },
+    sdg: {
+      title: "Objectius de Desenvolupament Sostenible",
+      lead: "Els cinc Objectius de Desenvolupament Sostenible (ODS) de l'ONU als quals contribueix Garuda.",
+      goal: "ODS {n}",
+      whyHead: "Per què hi contribuïm",
+      emblemAlt: "Emblema dels Objectius de Desenvolupament Sostenible de les Nacions Unides",
+      logoAlt: "Logotip de l'ODS {n}",
+      footerTitle: "Objectius de Desenvolupament Sostenible",
+      items: [
+        {
+          n: 7,
+          title: "Energia assequible i no contaminant",
+          why: "El menjador funciona amb un panell solar, una font d'energia renovable, de manera que pot operar durant molt de temps en entorns remots sense dependre de la xarxa elèctrica.",
+        },
+        {
+          n: 9,
+          title: "Indústria, innovació i infraestructura",
+          why: "Garuda és una solució pròpia de maquinari i programari que combina IA a la vora, connectivitat 4G remota i un disseny modular. És una infraestructura tecnològica innovadora per gestionar el medi natural.",
+        },
+        {
+          n: 11,
+          title: "Ciutats i comunitats sostenibles",
+          why: "Garuda ajuda a gestionar espècies invasores en entorns urbans i periurbans. Així protegeix la biodiversitat local, així com la salut i la seguretat de les comunitats que hi viuen.",
+        },
+        {
+          n: 12,
+          title: "Producció i consum responsables",
+          why: "El menjador es construeix amb materials sostenibles i es dissenya per poder reparar i reutilitzar-ne les peces. El seu menjador multiespècie funciona sense consumibles d'un sol ús.",
+        },
+        {
+          n: 15,
+          title: "Vida d'ecosistemes terrestres",
+          why: "Garuda detecta espècies invasores i permet actuar-hi de manera selectiva. D'aquesta manera protegeix la fauna autòctona i els ecosistemes dels quals depèn.",
+        },
+      ],
+    },
+    cookies: {
+      title: "Galetes i emmagatzematge",
+      text: "Aquest web no fa servir galetes de seguiment ni d'analítica. Només desa al teu navegador la preferència d'idioma i que has tancat aquest avís (emmagatzematge tècnic).",
+      close: "Tanca l'avís",
     },
     footer: {
       tagline: "Menjadores intel·ligents per a una avifauna urbana equilibrada.",
@@ -172,7 +254,9 @@ export default {
       top: "Torna a dalt",
       links: {
         roadmap: "Full de ruta",
-        stages: "Etapes",
+        phases: "Pas a pas",
+        hardware: "Hardware",
+        software: "Software",
         team: "Qui som",
         contact: "Contacta'ns",
       },
@@ -194,20 +278,19 @@ export default {
       invalidEmail: "Correu no vàlid",
     },
   },
-  projectV2: {
+  roadmap: {
     title: "Del prototip a la xarxa de ciutat.",
-    lead:
-      "Garuda és un prototip que encara està creixent. Aquí mostrem què fa avui i què pensem afegir. [Context del projecte: pendent]",
-    phases: [
-      { title: "Prototip", text: "Una menjadora amb dos compartiments, una càmera, un micròfon i un altaveu, construïda al voltant d'un Arduino Uno Q." },
-      { title: "Models i proves de camp", text: "[Pendent]" },
-      { title: "Servidors i web", text: "Servidors separats (API i base de dades, i un web de visualització), amb dades enviades per API des de cada placa." },
-      { title: "Més espècies i integració a la ciutat", text: "Més espècies, un altaveu d'alta fidelitat i integració amb altres productes de la ciutat." },
+    currentLabel: "Fita actual",
+    quarters: [
+      { label: "Q4 2026", current: true, items: ["Elaboració del MVP", "Acotar les mètriques del negoci", "Participació a l'Industrial Tech"] },
+      { label: "Q1 2027", items: ["Llançament de les primeres proves pilot", "Captació d'inversors i subvencions", "Preparar el llançament en sèrie"] },
+      { label: "Q2 2027", items: ["Anàlisi de les dades proveïdes per les proves pilot", "Optimització i millora del producte"] },
+      { label: "Q3 2027", items: ["Llançament oficial del servei", "Ampliació de l'equip", "Estudi de l'afectació a altres espècies invasores"] },
     ],
   },
   phasesPreview: {
     title: "Garuda, pas a pas",
-    phase2: { title: "Etapa 2", text: "Hi estem treballant..." },
-    steps: previewLines.map(([title, text]) => ({ title, text })),
+    privacy: {"title": "On van les dades", "flow": [{"label": "Càmera", "note": "Captura un fotograma"}, {"label": "Fotograma", "note": "S'envia xifrat per 4G, no per wifi"}, {"label": "Servidor", "note": "Processa el fotograma; la imatge no es guarda"}, {"label": "Registre de detecció", "note": "L'única cosa que s'emmagatzema"}, {"label": "Web", "note": "Mostra el registre de detecció"}], "kept": "Es guarda", "list": "Flux de privadesa, pas a pas"},
+    steps: [{"title": "El problema", "text": ["La cotorra de pit gris (Myiopsitta monachus) és una espècie invasora que s'ha expandit de manera notable a l'àrea metropolitana de Barcelona. Competeix amb les espècies autòctones a causa de danys a l'arbrat, als cultius i a les infraestructures amb els seus nius i fa que l'ecosistema urbà i periurbà perdi biodiversitat. Avui el seguiment i el control de la població es fan sobretot de forma manual, amb dades disperses i poca capacitat de reacció per part d'ajuntaments i entitats. Falta una eina que permeti saber amb precisió on són les cotorres, quantes n'hi ha i com evoluciona la població, sense dependre de recomptes puntuals."], "image": {"alt": "Pardals comuns"}}, {"title": "Com ho resolem", "text": ["Garuda és un dispositiu intel·ligent que combina monitoratge i control de l'espècie invasora en un sol punt. Incorpora una càmera amb intel·ligència artificial que identifica automàticament cada ocell que s'hi apropa, per exemple si és una cotorra o un pardal, i n'assigna un nivell de confiança.", "D'una banda, Garuda actua de forma passiva: cada detecció genera dades contínues sobre la presència, la distribució i l'activitat de l'espècie invasora. Amb aquesta informació, administracions i entitats poden fer un seguiment poblacional precís, detectar noves zones d'expansió i avaluar l'efecte de les mesures aplicades, sense dependre de recomptes manuals puntuals.", "De l'altra, Garuda actua de forma activa: el dispositiu integra una menjadora que, segons l'espècie identificada, dispensa pinso convencional si l'ocell és autòcton o pinso esterilitzant si és una cotorra. Així es redueix la capacitat reproductiva de la població invasora de manera progressiva, selectiva i no letal, sense afectar les espècies autòctones.", "El projecte va néixer a l'InterHack 2026 i comença amb la cotorra a l'àrea metropolitana de Barcelona, però està pensat per escalar a altres espècies invasores i a altres territoris."], "alt": "Vista frontal del prototip de Garuda"}, {"title": "Model 3D", "text": [], "sub": "El nostre prototip de solució", "alt": "Vista de tres quarts del model de la caseta de fusta"}, {"title": "Dos compartiments", "text": [], "alt": "Model 3D explosionat amb les dues menjadores"}, {"title": "Monitoratge amb IA", "text": ["Garuda incorpora una càmera amb intel·ligència artificial que identifica automàticament cada ocell que s'hi apropa, per exemple si és una cotorra o un pardal, i n'assigna un nivell de confiança. Cada detecció genera dades contínues sobre la presència, la distribució i l'activitat de l'espècie invasora. Amb aquesta informació, administracions i entitats poden fer un seguiment poblacional precís, detectar noves zones d'expansió i avaluar l'efecte de les mesures aplicades, sense dependre de recomptes manuals puntuals."], "alt": "Diagrama: la càmera de la menjadora capta els ocells i la IA els classifica (cotorra 0,92 i pardal 0,85); la cotorra suma +1 al mapa i el pardal queda protegit"}, {"title": "Privadesa des del disseny", "text": ["Garuda no emmagatzema imatges. La càmera captura un fotograma, que s'envia xifrat per 4G (no per wifi) a un servidor, on es processa. Només es conserva el registre de detecció, que és el que mostra el web. Com que no es guarden imatges, es protegeix la privadesa dels ciutadans."]}, {"title": "Futur", "text": ["Garuda comença amb la cotorra a l'àrea metropolitana de Barcelona, però està pensat per escalar a altres espècies invasores i a altres territoris. També es pot integrar amb altres solucions de control i esdevenir una eina de recerca científica i d'educació ambiental, gràcies a les dades contínues que genera."]}],
   },
 };

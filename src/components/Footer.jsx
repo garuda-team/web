@@ -2,6 +2,9 @@ import { Rich } from "../lib/text.jsx";
 import { site, ui } from "../content.js";
 import { BrandMark } from "./Nav.jsx";
 import { smoothScrollToTop } from "../lib/motion.js";
+import { fill } from "../lib/text.jsx";
+import CookieNotice from "./CookieNotice.jsx";
+import { sdgLogo } from "../lib/photos.js";
 
 export default function Footer() {
   const t = ui.footer;
@@ -20,15 +23,32 @@ export default function Footer() {
               <span className="footer__brand-name"><Rich text={site.teamName} /></span>
             </a>
             <p className="footer__tagline">{t.tagline}</p>
+            <nav className="footer__sdg" aria-label={ui.sdg.footerTitle}>
+              <ul className="footer__sdg-list">
+                {ui.sdg.items.map((it) => {
+                  const logo = sdgLogo(it.n);
+                  if (!logo) return null;
+                  const label = `${fill(ui.sdg.goal, { n: it.n })} – ${it.title}`;
+                  return (
+                    <li key={it.n}>
+                      <a className="footer__sdg-link" href={`#/sdg/sdg-${it.n}`} aria-label={label} title={label}>
+                        <img className="footer__sdg-logo" src={logo.url} alt="" width="64" height="64" loading="lazy" decoding="async" />
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
           </div>
 
           <nav className="footer__cols" aria-label={t.projectTitle}>
             <div className="footer__col">
               <h3 className="footer__head">{t.projectTitle}</h3>
               <ul>
-                <li><a href="#/home/project">{l.roadmap}</a></li>
-                <li><a href="#/home/phases">{l.stages}</a></li>
-                <li><a href="#/home/team">{l.team}</a></li>
+                <li><a href="#/home/roadmap">{l.roadmap}</a></li>
+                <li><a href="#/hardware">{l.hardware}</a></li>
+                <li><a href="#/software">{l.software}</a></li>
+                <li><a href="#/team">{l.team}</a></li>
               </ul>
             </div>
 
@@ -51,6 +71,7 @@ export default function Footer() {
           <a className="footer__top-link" href="#/" onClick={goTop}>{t.top} ↑</a>
         </div>
       </div>
+      <CookieNotice />
     </footer>
   );
 }
