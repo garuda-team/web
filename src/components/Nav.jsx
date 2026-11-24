@@ -174,8 +174,6 @@ export default function Nav({ route }) {
           {pages}
           {links.length ? <hr className="nav__rule" /> : null}
           {links}
-          <hr className="nav__rule" />
-          {langSelect("nav__lang--sheet")}
         </div>
       </nav>
     </header>

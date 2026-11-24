@@ -65,38 +65,75 @@ export default function SoftwareDiagram() {
         </g>
 
         {/* branch to two stores */}
-        <path d="M 260 344 Q 200 370 165 395" className="sw-arr" markerEnd="url(#sw-arrow)" />
-        <path d="M 460 344 Q 520 370 555 395" className="sw-arr" markerEnd="url(#sw-arrow)" />
+        <path d="M 260 344 Q 200 370 155 395" className="sw-arr" markerEnd="url(#sw-arrow)" />
+        <path d="M 460 344 Q 520 370 565 395" className="sw-arr" markerEnd="url(#sw-arrow)" />
 
         {/* Row 4 — Storage */}
-        <g transform="translate(40, 400)">
-          <rect width="250" height="90" rx="12" className="sw-box sw-box--store" />
-          <text x="125" y="34" textAnchor="middle" className="sw-title">{t.raw.title}</text>
-          <text x="125" y="55" textAnchor="middle" className="sw-sub">{t.raw.sub}</text>
-          <text x="125" y="73" textAnchor="middle" className="sw-sub sw-sub--dim">{t.raw.hint}</text>
+        <g transform="translate(10, 400)">
+          <rect width="290" height="90" rx="12" className="sw-box sw-box--store" />
+          <text x="145" y="34" textAnchor="middle" className="sw-title">{t.raw.title}</text>
+          <text x="145" y="55" textAnchor="middle" className="sw-sub">{t.raw.sub}</text>
+          <text x="145" y="73" textAnchor="middle" className="sw-sub sw-sub--dim">{t.raw.hint}</text>
         </g>
-        <g transform="translate(430, 400)">
-          <rect width="250" height="90" rx="12" className="sw-box sw-box--store" />
-          <text x="125" y="34" textAnchor="middle" className="sw-title">{t.curated.title}</text>
-          <text x="125" y="55" textAnchor="middle" className="sw-sub">{t.curated.sub}</text>
-          <text x="125" y="73" textAnchor="middle" className="sw-sub sw-sub--dim">{t.curated.hint}</text>
+        <g transform="translate(420, 400)">
+          <rect width="290" height="90" rx="12" className="sw-box sw-box--store" />
+          <text x="145" y="34" textAnchor="middle" className="sw-title">{t.curated.title}</text>
+          <text x="145" y="55" textAnchor="middle" className="sw-sub">{t.curated.sub}</text>
+          <text x="145" y="73" textAnchor="middle" className="sw-sub sw-sub--dim">{t.curated.hint}</text>
         </g>
 
-        <path d="M 165 490 L 165 540" className="sw-arr" markerEnd="url(#sw-arrow)" />
-        <path d="M 555 490 L 555 540" className="sw-arr" markerEnd="url(#sw-arrow)" />
+        <path d="M 155 490 L 155 540" className="sw-arr" markerEnd="url(#sw-arrow)" />
+        <path d="M 565 490 L 565 540" className="sw-arr" markerEnd="url(#sw-arrow)" />
 
         {/* Row 5 — Serving */}
-        <g transform="translate(40, 550)">
-          <rect width="250" height="56" rx="12" className="sw-box sw-box--serve" />
-          <text x="125" y="26" textAnchor="middle" className="sw-title">{t.serve.title}</text>
-          <text x="125" y="44" textAnchor="middle" className="sw-sub">{t.serve.sub}</text>
+        <g transform="translate(10, 550)">
+          <rect width="290" height="56" rx="12" className="sw-box sw-box--serve" />
+          <text x="145" y="26" textAnchor="middle" className="sw-title">{t.serve.title}</text>
+          <text x="145" y="44" textAnchor="middle" className="sw-sub">{t.serve.sub}</text>
         </g>
-        <g transform="translate(430, 550)">
-          <rect width="250" height="56" rx="12" className="sw-box sw-box--web" />
-          <text x="125" y="26" textAnchor="middle" className="sw-title">{t.web.title}</text>
-          <text x="125" y="44" textAnchor="middle" className="sw-sub">{t.web.sub}</text>
+        <g transform="translate(420, 550)">
+          <rect width="290" height="56" rx="12" className="sw-box sw-box--web" />
+          <text x="145" y="26" textAnchor="middle" className="sw-title">{t.web.title}</text>
+          <text x="145" y="44" textAnchor="middle" className="sw-sub">{t.web.sub}</text>
         </g>
       </svg>
+
+      {/* Narrow screens: same texts as a vertical flow of boxes */}
+      <ol className="sw-flow">
+        <li className="sw-flow__step">
+          <div className="sw-flow__box sw-flow__box--devices">
+            {t.device.map((d) => (
+              <span key={d} className="sw-flow__chip">{d}</span>
+            ))}
+          </div>
+          <span className="sw-flow__link" aria-hidden="false">{t.linkSecure}</span>
+        </li>
+        {[
+          ["link", t.secure],
+          ["process", t.process],
+        ].map(([k, b]) => (
+          <li key={k} className="sw-flow__step">
+            <div className={`sw-flow__box sw-flow__box--${k}`}>
+              <strong className="sw-flow__title">{b.title}</strong>
+              <span className="sw-flow__sub">{b.sub}</span>
+            </div>
+          </li>
+        ))}
+        {[
+          ["store", t.raw, true],
+          ["store", t.curated, true],
+          ["serve", t.serve],
+          ["web", t.web],
+        ].map(([k, b, hint], i) => (
+          <li key={i} className={`sw-flow__step${i === 2 ? " sw-flow__step--split" : ""}`}>
+            <div className={`sw-flow__box sw-flow__box--${k}`}>
+              <strong className="sw-flow__title">{b.title}</strong>
+              <span className="sw-flow__sub">{b.sub}</span>
+              {hint && <span className="sw-flow__sub sw-flow__sub--dim">{b.hint}</span>}
+            </div>
+          </li>
+        ))}
+      </ol>
     </figure>
   );
 }

@@ -77,7 +77,7 @@ export default function Flora({ birdsOnly = false }) {
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      vw = window.innerWidth;
+      vw = document.documentElement.clientWidth || window.innerWidth;
       vh = window.innerHeight;
       small = vw <= 720;
       canvas.width = Math.round(vw * dpr);

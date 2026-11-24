@@ -134,7 +134,7 @@ export default function App() {
       return;
     }
     if (route === "/stats") {
-      document.title = fill(ui.docTitlePage, { page: ui.nav.pageLinks.find((p) => p.path === "/stats")?.label ?? "Stats" });
+      document.title = fill(ui.docTitlePage, { page: ui.nav.pageLinks.find((p) => p.path === "/stats")?.label ?? "Statistics" });
       return;
     }
     if (route === "/sdg") {

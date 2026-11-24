@@ -7,9 +7,10 @@ import { merge } from "./content.js";
 
 /*
   hardware3d: Hardware 3D page (annotated model). Shape (identical in es/ca; features keep 9 entries, same order):
-    hardware3d.title, loading, fallback, listLabel, partsLabel, partFeeders, partDoorL, partDoorR, rotateHint, loadError, retry   texts (fallback = no WebGL; loadError + retry = load failure; listLabel = aria-label of the list;
-                            parts* = hint and buttons to open the feeders and the two doors at the start)
-    hardware3d.features[9]  { id, title, text, y, side }  title stays in English in all languages;
+    hardware3d.title, loading, fallback, listLabel, partsLabel, partFeeders, partDoorL, partDoorR, rotateHint, rotateHintTouch, scrollHint, loadError, retry   texts (fallback = no WebGL; loadError + retry = load failure; listLabel = aria-label of the list;
+                            parts* = hint and buttons to open the feeders and the two doors at the start;
+                            rotateHint = desktop, rotateHintTouch = mobile (two fingers rotate, one finger scrolls); scrollHint = short "scroll for more" cue)
+    hardware3d.features[9]  { id, title, text, y, side }  title translated per language;
                             y = provisional height in the model, 0 (top) to 1 (bottom); side = "left" | "right"
 */
 export const hardware3dEn = {
@@ -24,6 +25,8 @@ export const hardware3dEn = {
   partDoorL: "Left door",
   partDoorR: "Right door",
   rotateHint: "Drag to rotate",
+  rotateHintTouch: "Use two fingers to rotate",
+  scrollHint: "Scroll to see more information",
   features: [
     { id: "remote-4g-connection", title: "Remote 4G connection", text: "Mobile connectivity for remote monitoring and alerts, without relying on WiFi.", y: 0.06, side: "left" },
     { id: "edge-ai-detection", title: "AI detection", text: "Frames are encrypted on the device and sent over 4G to the server, where the AI detects the species. The prototype does not run AI on board.", y: 0.17, side: "right" },

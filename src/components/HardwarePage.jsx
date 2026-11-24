@@ -159,6 +159,23 @@ export default function HardwarePage() {
     if (!on) seenLocked.current = true;
     else if (seenLocked.current) setSaid(true);
   }, []);
+  const [coarse, setCoarse] = useState(() => !!window.matchMedia?.("(pointer: coarse)").matches); /* touch: two fingers rotate */
+  useEffect(() => {
+    const mq = window.matchMedia?.("(pointer: coarse)");
+    const sync = () => setCoarse(!!mq?.matches);
+    mq?.addEventListener?.("change", sync);
+    return () => mq?.removeEventListener?.("change", sync);
+  }, []);
+  const [started, setStarted] = useState(false); /* the scroll has left the start: the "scroll for more" cue goes away */
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return undefined;
+    const check = () => setStarted(el.getBoundingClientRect().top < -8);
+    check();
+    window.addEventListener("scroll", check, { passive: true });
+    return () => window.removeEventListener("scroll", check);
+  }, []);
+  const rotateText = (coarse && H.rotateHintTouch) || H.rotateHint;
   const bgRef = useRef(null); /* full-stage holder of the canvas: model and forest are one scene */
   /* "pending" until mounted (and in SSR); then "3d", "static" (reduced motion) or "fallback". */
   const [mode, setMode] = useState("pending");
@@ -224,8 +241,11 @@ export default function HardwarePage() {
           ) : null}
           {showModel && loaded ? (
             <div className="hardware3d__hint-wrap">
-              <p className={`hardware3d__hint${free ? " is-on" : ""}`} aria-hidden="true">{H.rotateHint}</p>
-              <p className="sr-only" aria-live="polite">{said ? H.rotateHint : ""}</p>
+              <p className={`hardware3d__hint${free ? " is-on" : ""}`} aria-hidden="true">{rotateText}</p>
+              <p className="sr-only" aria-live="polite">{said ? rotateText : ""}</p>
+              {animated && H.scrollHint ? (
+                <p className={`hardware3d__scroll${started ? "" : " is-on"}`} aria-live="polite">{started ? "" : H.scrollHint}</p>
+              ) : null}
             </div>
           ) : null}
           <header className="hardware3d__head wrap">

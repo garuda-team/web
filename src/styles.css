@@ -9,6 +9,8 @@
 */
 
 :root {
+  /* Body text: weight and soft halo for legibility over flora and photos */
+  --weight-body: 500;
   /* Whites */
   --paper: #ffffff;
   --ivory: #faf7f0;
@@ -73,7 +75,7 @@
   --bg: var(--ivory);
   --bg-2: var(--sand);
   --fg: var(--ink);
-  --muted: var(--forest);
+  --muted: var(--forest-deep);
   --rule: var(--sand);
   --rule-strong: var(--linen);
   --panel: var(--ivory);
@@ -90,7 +92,7 @@
   --bg: var(--ivory);
   --bg-2: var(--sand);
   --fg: var(--ink);
-  --muted: var(--forest);
+  --muted: var(--forest-deep);
   --focus: var(--sky-deep);
   --rule: var(--sand);
   --rule-strong: var(--linen);
@@ -107,7 +109,7 @@
   --bg: var(--sky-mist);
   --bg-2: var(--mist);
   --fg: var(--ink);
-  --muted: var(--forest);
+  --muted: var(--forest-deep);
   --focus: var(--sky-deep);
   --rule: var(--mist);
   --rule-strong: var(--sky-soft);
@@ -174,7 +176,7 @@ body {
   margin: 0;
   font-family: var(--font);
   font-size: var(--t-md);
-  font-weight: 400;
+  font-weight: var(--weight-body);
   line-height: 1.6;
   background: var(--sand);
   color: var(--ink);
@@ -1486,7 +1488,7 @@ code {
   --bg: var(--sand);
   --bg-2: var(--linen);
   --fg: var(--ink);
-  --muted: var(--forest);
+  --muted: var(--forest-deep);
   --focus: var(--sky-deep);
   --rule: var(--sand);
   --rule-strong: var(--linen);

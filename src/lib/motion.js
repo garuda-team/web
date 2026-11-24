@@ -71,7 +71,10 @@ let lenisRaf = 0;
 
 export function startLenis() {
   if (lenis || !motionOK()) return lenis;
-  lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+  lenis = new Lenis({
+    lerp: 0.1,
+    smoothWheel: true,
+  });
   const loop = (t) => {
     lenis?.raf(t);
     lenisRaf = requestAnimationFrame(loop);
@@ -234,6 +237,12 @@ export function onScrollProgress(el, update) {
  */
 export function autoReveal(selector, { y = 32, tension = 170, friction = 24, stagger = 70 } = {}) {
   if (!motionOK() || typeof IntersectionObserver === "undefined") return () => {};
+  /* Team page on phones: shorter travel, stiffer spring and a tighter stagger so the reveal keeps up with scrolling. */
+  if (parseHash(window.location.hash)?.path === "/team" && window.matchMedia("(max-width: 899px)").matches) {
+    y = Math.min(y, 20);
+    tension = Math.max(tension, 260);
+    stagger = Math.min(stagger, 25);
+  }
   const els = Array.from(document.querySelectorAll(selector));
   const springs = new Set();
   const timers = [];

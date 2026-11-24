@@ -19,7 +19,11 @@ export default function StubPage({ page }) {
       <GhostWord text={ghost} />
       <div className="wrap">
         <div className="section-head stub__head">
-          <SplitWords as="h1" className="h2 stub__title" text={title} />
+          {page === "team" ? (
+            <h1 className="sr-only" id={`${id}-title`}>{title}</h1>
+          ) : (
+            <SplitWords as="h1" className="h2 stub__title" text={title} />
+          )}
           {lead ? <p className="lead stub__lead"><Rich text={lead} /></p> : null}
           {text ? <p className="lead stub__lead"><Rich text={text} /></p> : null}
         </div>

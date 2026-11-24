@@ -14,13 +14,14 @@ function Chevron({ dir = "right" }) {
   );
 }
 
-/* Where a step's picture comes from: a named file in photos/steps (optional), a model snapshot (home_model, by number) or a remote image. */
+/* Where a step's picture comes from: a named file in photos/steps (optional), a model snapshot (home_model, by number). */
 function pictureOf(step) {
   const own = step.photo ? named("steps", step.photo)[0] : null;
   if (own) return { url: own.url, contain: true, diagram: true };
   const model = step.model ? startingWith("home_model", step.model)[0] : null;
   if (model) return { url: model.url, contain: false };
-  if (step.image) return { url: step.image.src, contain: false, remote: true };
+  const shot = step.image?.photo ? named("steps", step.image.photo)[0] : null;
+  if (shot) return { url: shot.url, contain: false };
   return null;
 }
 
@@ -53,7 +54,7 @@ function Front({ step, n, picture, children }) {
         <div className="fcard__badge" aria-hidden="true">{step.badge}</div>
       ) : picture ? (
         <div className="fcard__media" data-fit={picture.contain ? "contain" : "cover"} data-kind={picture.diagram ? "diagram" : undefined}>
-          <img src={picture.url} referrerPolicy={picture.remote ? "no-referrer" : undefined} alt={step.alt || step.image?.alt || ""} loading="lazy" decoding="async" />
+          <img src={picture.url} alt={step.alt || step.image?.alt || ""} loading="lazy" decoding="async" />
         </div>
       ) : (
         <div className="fcard__media fcard__media--empty" aria-hidden="true" />
@@ -124,6 +125,54 @@ export default function Build({ id = "build", data, preview = false }) {
   const [active, setActive] = useState(0);
   const go = (i) => setActive(Math.max(0, Math.min(total - 1, i)));
   const step = data.steps[active];
+  const ctaBar = useRef(null);
+  /* The sticky CTA yields (hidden) while it would sit on top of the card bar or the dock, so it never covers a control. */
+  useEffect(() => {
+    const bar = ctaBar.current;
+    if (!preview || !bar) return undefined;
+    let raf = 0;
+    const hits = (a, b) => b && a.top < b.bottom && a.bottom > b.top && a.left < b.right && a.right > b.left;
+    const check = () => {
+      raf = 0;
+      const btn = bar.firstElementChild;
+      if (!btn) return;
+      const r = btn.getBoundingClientRect();
+      const root = bar.closest(".build");
+      const over = [".fcard__bar", ".build__dock"].some((q) => {
+        const el = root?.querySelector(q);
+        return el && hits(r, el.getBoundingClientRect());
+      });
+      /* Never hide the CTA while it holds focus. */
+      bar.dataset.yield = over && !bar.contains(document.activeElement) ? "yes" : "no";
+    };
+    const queue = () => {
+      if (!raf) raf = requestAnimationFrame(check);
+    };
+    check();
+    window.addEventListener("scroll", queue, { passive: true });
+    window.addEventListener("resize", queue);
+    bar.addEventListener("focusin", queue);
+    bar.addEventListener("focusout", queue);
+    /* Card flips or height changes move the bars without any scroll: observe the layout boxes involved. */
+    let ro = null;
+    if (typeof ResizeObserver !== "undefined") {
+      ro = new ResizeObserver(queue);
+      const root = bar.closest(".build");
+      [".build__cards", ".fcard", ".fcard__bar", ".build__dock"].forEach((q) => {
+        const el = root?.querySelector(q);
+        if (el) ro.observe(el);
+      });
+      ro.observe(bar);
+    }
+    return () => {
+      if (ro) ro.disconnect();
+      window.removeEventListener("scroll", queue);
+      window.removeEventListener("resize", queue);
+      bar.removeEventListener("focusin", queue);
+      bar.removeEventListener("focusout", queue);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [preview, active]);
   return (
     <section id={id} className="section build surface-paper" data-surface="paper" data-wave aria-labelledby={`${id}-title`}>
       <GhostWord text={ghosts.steps} />
@@ -146,6 +195,9 @@ export default function Build({ id = "build", data, preview = false }) {
                 <span>/</span>
                 <span>{pad2(total)}</span>
               </span>
+              <button type="button" className="build__nav" onClick={() => go(active + 1)} disabled={active === total - 1} aria-label={ui.build.next}>
+                <Chevron dir="right" />
+              </button>
               <ol className="build__dots" aria-label={ui.build.progress}>
                 {data.steps.map((s, i) => (
                   <li key={s.title}>
@@ -155,15 +207,12 @@ export default function Build({ id = "build", data, preview = false }) {
                   </li>
                 ))}
               </ol>
-              <button type="button" className="build__nav" onClick={() => go(active + 1)} disabled={active === total - 1} aria-label={ui.build.next}>
-                <Chevron dir="right" />
-              </button>
             </div>
             <p className="sr-only" aria-live="polite">{fill(ui.build.goTo, { n: active + 1, total })}: {step.title}</p>
           </div>
 
           {preview ? (
-            <div className="build__cta-bar">
+            <div className="build__cta-bar" ref={ctaBar} data-yield="no">
               <a className="btn btn--solid build__cta" href={routeHash("/hardware")}>{ui.build.explore}</a>
             </div>
           ) : null}

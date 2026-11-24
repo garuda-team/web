@@ -3,8 +3,8 @@ import {
   ACESFilmicToneMapping, AmbientLight, Box3, BoxGeometry, BufferAttribute, BufferGeometry, ClampToEdgeWrapping, Color,
   CylinderGeometry, DataTexture, DepthTexture, DirectionalLight, DoubleSide, EdgesGeometry, Fog, Group, HalfFloatType, HemisphereLight,
   IcosahedronGeometry, InstancedMesh, LinearFilter, LinearMipmapLinearFilter, LineBasicMaterial, LineSegments, Matrix4, Mesh, MeshLambertMaterial,
-  MeshStandardMaterial, Object3D, OrthographicCamera, PCFSoftShadowMap, PlaneGeometry, PMREMGenerator, Quaternion, Raycaster,
-  RepeatWrapping, Scene, ShaderMaterial, SphereGeometry, Spherical, SRGBColorSpace, TextureLoader, Vector2, Vector3, Vector4,
+  MeshStandardMaterial, Object3D, OrthographicCamera, PCFShadowMap, PlaneGeometry, PMREMGenerator, Quaternion, Raycaster,
+  RepeatWrapping, Scene, ShaderMaterial, SphereGeometry, Spherical, SRGBColorSpace, TextureLoader, TOUCH, Vector2, Vector3, Vector4,
   WebGLRenderer, WebGLRenderTarget,
 } from "three";
 import { mergeGeometries, mergeVertices } from "three/examples/jsm/utils/BufferGeometryUtils.js";
@@ -604,7 +604,7 @@ export default function HardwareModel({ trackRef, boxRef, bgRef, reduced, onRead
     renderer.toneMapping = ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1;
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = PCFSoftShadowMap;
+    renderer.shadowMap.type = PCFShadowMap;
     const scene = new Scene();
     const bgScene = new Scene(); /* the forest: rendered apart so it can be blurred and can never cover the model */
     /* Procedural studio environment until the panorama arrives; then the forest itself lights the scene. */
@@ -649,7 +649,8 @@ export default function HardwareModel({ trackRef, boxRef, bgRef, reduced, onRead
     controls.enableDamping = !reduced;
     controls.rotateSpeed = 0.8;
     canvas.style.touchAction = "pan-y"; /* OrbitControls sets "none", which would trap vertical swipes on mobile */
-    controls.touches.TWO = -1; /* two fingers are handled below (pinch only; no rotate/pan from OrbitControls) */
+    controls.touches.ONE = -1; /* one finger scrolls the page */
+    controls.touches.TWO = TOUCH.ROTATE; /* two fingers rotate (the pinch zoom below keeps them from scrolling) */
     /* Pinch zoom (two fingers, free view only). The wheel is untouched: it keeps scrolling the page. */
     let pinch = 0;
     const touchDist = (e) => Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
@@ -784,7 +785,7 @@ export default function HardwareModel({ trackRef, boxRef, bgRef, reduced, onRead
         (hb * 0.425) / Math.max(extBox.max.y, -extBox.min.y, 1e-6),
       );
       const sMax = narrow ? fitNarrow() : fitRight();
-      const sMin = Math.min((w * (narrow ? 0.5 : 0.3)) / size.x, (hb * 0.4) / size.y, sMax);
+      const sMin = Math.min((w * (narrow ? 0.8 : 0.3)) / size.x, (hb * (narrow ? 0.5 : 0.4)) / size.y, sMax); /* phones: fill the width */
       const grow = reduced ? 1 : smooth(ASSEMBLE[0], ASSEMBLE[1], p) - smooth(JOIN[0], JOIN[1], p);
       /* reduced motion: centred and sized for the exploded box, so tapping a feeder never pushes it out of frame (BUG-170) */
       const s = reduced ? Math.min((w * (narrow ? 0.9 : 0.6)) / size.x, (hb * 0.9) / size.y, fitNarrow()) : lerp(sMin, sMax, grow);
