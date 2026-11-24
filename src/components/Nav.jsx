@@ -6,6 +6,7 @@ import { Rich } from "../lib/text.jsx";
 import { Icon } from "./Icons.jsx";
 import { LANG, LANGS, setLang } from "../lib/lang.js";
 import { inV2Folder } from "../lib/photos.js";
+import { lockScroll } from "../lib/motion.js";
 
 const SAMPLE_X = [0.5, 0.25, 0.75, 0.1, 0.9];
 
@@ -105,8 +106,20 @@ export default function Nav({ route }) {
       setOpen(false);
       menuBtn.current?.focus();
     };
+    const wide = window.matchMedia("(min-width: 1081px)");
+    const onWide = () => wide.matches && setOpen(false);
+    lockScroll(true);
+    /* Keep Tab inside the header: everything else on the page is inert while the sheet is open. */
+    const others = [...(ref.current?.parentElement?.children ?? [])].filter((el) => el !== ref.current && !el.inert);
+    others.forEach((el) => { el.inert = true; });
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    wide.addEventListener("change", onWide);
+    return () => {
+      others.forEach((el) => { el.inert = false; });
+      window.removeEventListener("keydown", onKey);
+      wide.removeEventListener("change", onWide);
+      lockScroll(false);
+    };
   }, [open]);
 
   const close = () => setOpen(false);

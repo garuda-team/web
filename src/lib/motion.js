@@ -110,9 +110,11 @@ export function smoothScrollToTop() {
 
 
 /** Pause smooth scroll (loader, photo viewer). Safe when Lenis is off. */
+let locks = 0;
 export function lockScroll(locked) {
+  locks = Math.max(0, locks + (locked ? 1 : -1));
   if (!lenis) return;
-  if (locked) lenis.stop();
+  if (locks > 0) lenis.stop();
   else lenis.start();
 }
 

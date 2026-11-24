@@ -172,6 +172,15 @@ html {
   text-size-adjust: 100%;
 }
 
+/* El nav es sticky: compensa el scroll-padding para que enfocar sus
+   controles no provoque scroll (las anclas #id siguen usando el padding). */
+.nav a,
+.nav button,
+.nav select,
+.nav [tabindex] {
+  scroll-margin-top: calc(-1 * (var(--nav-h) + 12px));
+}
+
 body {
   margin: 0;
   font-family: var(--font);
@@ -453,8 +462,24 @@ code {
 }
 
 .nav__sheet {
-  border-top: 1px solid var(--rule);
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  height: 100vh;
+  height: 100dvh;
+  padding-top: calc(env(safe-area-inset-top, 0px) + var(--nav-h));
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: var(--bg);
+}
+
+.nav__sheet[hidden] {
+  display: none;
+}
+
+.nav__bar {
+  position: relative;
+  z-index: 1;
 }
 
 .nav__sheet-inner {

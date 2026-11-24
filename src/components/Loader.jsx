@@ -41,10 +41,16 @@ export default function Loader({ onReady }) {
       : null;
 
     const timers = [];
+    let released = false;
+    const release = () => {
+      if (released) return;
+      released = true;
+      lockScroll(false);
+    };
     const lift = () => {
       if (done.current) return;
       done.current = true;
-      lockScroll(false);
+      release();
       onReady();
       setPhase("out");
     };
@@ -59,7 +65,7 @@ export default function Loader({ onReady }) {
       timers.forEach(window.clearTimeout);
       window.removeEventListener("load", countdown);
       window.removeEventListener("keydown", lift);
-      lockScroll(false);
+      release();
     };
   }, [phase, onReady]);
 
